@@ -1,0 +1,14 @@
+# Normalize line endings to LF on checkout for all text files. Prettier is
+# configured with endOfLine: "lf"; this keeps the working tree consistent
+# across platforms (notably Windows) so `pnpm run format:check` stays green.
+* text=auto eol=lf
+
+# Explicitly binary — never touch these.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary

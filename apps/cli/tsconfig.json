@@ -6,7 +6,11 @@
     "rootDir": "src",
     "paths": {
       "@guardrails/shared": ["../../packages/shared/src/index.ts"],
-      "@guardrails/core": ["../../packages/core/src/index.ts"]
+      "@guardrails/core": ["../../packages/core/src/index.ts"],
+      "@guardrails/adapters": ["../../packages/adapters/src/index.ts"],
+      "@guardrails/audit": ["../../packages/audit/src/index.ts"],
+      "@guardrails/git": ["../../packages/git/src/index.ts"],
+      "@guardrails/mcp-server": ["../../packages/mcp-server/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"]

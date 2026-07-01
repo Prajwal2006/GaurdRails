@@ -74,17 +74,29 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 - ✅ Testable command layer (IO abstraction); 33 CLI/core tests; verified by
   running the built binary end-to-end
 
-## Phase 6 — Git protection ⬜
+## Phase 6 — Git protection ✅
 
-- ⬜ Hook installer (pre-commit, pre-push) — idempotent, reversible
-- ⬜ Staged-file scanner + repo scanner
-- ⬜ Educational block messages + auto-fix suggestions (.gitignore, .env.example)
+- ✅ `@guardrails/git` package (staged + repo scanning, hook management)
+- ✅ Hook installer (pre-commit, pre-push) — idempotent, reversible, preserves
+  any pre-existing hook content (begin/end marker block)
+- ✅ Staged-file scanner (`scanStaged`) + repo scanner (`scanTracked`), binary /
+  oversized skip, worst-outcome verdict, blocked flag
+- ✅ Educational block messages + auto-fix suggestions (`.gitignore`,
+  `.env.example`) with pure builders and on-disk `applyFixes`
+- ✅ CLI: `guardrails git install|uninstall|status|scan|check|fix|pre-commit|pre-push`
+- ✅ 44 tests incl. real-git integration; secrets never leaked in messages
 
-## Phase 7 — MCP server & agent adapters ⬜
+## Phase 7 — MCP server & agent adapters ✅
 
-- ⬜ `AgentAdapter` implementations (Claude Code, Codex, Cursor, Copilot, Gemini)
-- ⬜ MCP server exposing only approved files
-- ⬜ Allow/deny lists + audit logging
+- ✅ `@guardrails/adapters` — `AgentAdapter` implementations (Claude Code, Codex,
+  Copilot, Gemini CLI, Cursor, Windsurf) + `AdapterRegistry`, shared normalizer
+- ✅ `@guardrails/audit` — `AuditSink` implementations (`MemoryAuditSink`,
+  `JsonlAuditSink`) + value-free `createAuditEvent`
+- ✅ `@guardrails/mcp-server` — `Mediator` (allow/deny lists + Guardrails engine +
+  audit logging), MCP `McpServer` (JSON-RPC 2.0: initialize/tools) exposing only
+  `read_file` / `list_files`, stdio transport, path-traversal-guarded file source
+- ✅ CLI: `guardrails mcp serve|info`, `guardrails adapters`, `guardrails audit`
+- ✅ 60+ tests; denied files never returned, redaction verified, audit is value-free
 
 ## Later phases ⬜
 

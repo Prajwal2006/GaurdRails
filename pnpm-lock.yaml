@@ -51,15 +51,39 @@ importers:
 
   apps/cli:
     dependencies:
+      '@guardrails/adapters':
+        specifier: workspace:*
+        version: link:../../packages/adapters
+      '@guardrails/audit':
+        specifier: workspace:*
+        version: link:../../packages/audit
       '@guardrails/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@guardrails/git':
+        specifier: workspace:*
+        version: link:../../packages/git
+      '@guardrails/mcp-server':
+        specifier: workspace:*
+        version: link:../../packages/mcp-server
       '@guardrails/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       commander:
         specifier: ^12.1.0
         version: 12.1.0
+
+  packages/adapters:
+    dependencies:
+      '@guardrails/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/audit:
+    dependencies:
+      '@guardrails/shared':
+        specifier: workspace:*
+        version: link:../shared
 
   packages/core:
     dependencies:
@@ -72,6 +96,33 @@ importers:
       '@guardrails/secret-detector':
         specifier: workspace:*
         version: link:../secret-detector
+      '@guardrails/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/git:
+    dependencies:
+      '@guardrails/core':
+        specifier: workspace:*
+        version: link:../core
+      '@guardrails/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/mcp-server:
+    dependencies:
+      '@guardrails/adapters':
+        specifier: workspace:*
+        version: link:../adapters
+      '@guardrails/audit':
+        specifier: workspace:*
+        version: link:../audit
+      '@guardrails/core':
+        specifier: workspace:*
+        version: link:../core
+      '@guardrails/policy-engine':
+        specifier: workspace:*
+        version: link:../policy-engine
       '@guardrails/shared':
         specifier: workspace:*
         version: link:../shared
