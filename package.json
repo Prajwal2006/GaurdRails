@@ -26,6 +26,10 @@
     "clean": "pnpm -r exec rm -rf dist .turbo node_modules/.cache",
     "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test"
   },
+  "dependencies": {
+    "@guardrails/secret-detector": "workspace:*",
+    "@guardrails/shared": "workspace:*"
+  },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "@types/node": "^22.10.5",

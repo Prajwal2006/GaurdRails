@@ -1,6 +1,18 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
+// Resolve workspace packages to their TypeScript source so tests never need a
+// build step and always run against the latest code.
+const pkg = (name: string): string =>
+  fileURLToPath(new URL(`./packages/${name}/src/index.ts`, import.meta.url));
+
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@guardrails/shared': pkg('shared'),
+      '@guardrails/secret-detector': pkg('secret-detector'),
+    },
+  },
   test: {
     globals: false,
     environment: 'node',

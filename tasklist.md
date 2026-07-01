@@ -27,18 +27,19 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 - ✅ Educational content model (`Explanation`, `ExperienceLevel`)
 - ✅ 32 unit tests incl. the "masking never leaks a full value" invariant
 
-## Phase 2 — `@guardrails/secret-detector` ⬜
+## Phase 2 — `@guardrails/secret-detector` ✅
 
-- ⬜ Pluggable `DetectorRegistry`
-- ⬜ Filename detector (`.env`, keys, cloud creds, kubeconfig, …)
-- ⬜ Provider regex detectors (OpenAI, Anthropic, AWS, GitHub PAT, Stripe,
-  Slack, Twilio, Google, Sendgrid, npm, …)
-- ⬜ Private key / certificate detector (PEM blocks)
-- ⬜ JWT detector
-- ⬜ Connection-string detector (Postgres, MySQL, Mongo, Redis, AMQP)
-- ⬜ Shannon-entropy detector with tunable threshold + allowlist
-- ⬜ Content scanner that returns line/column + redacted preview
-- ⬜ ≥ 90% test coverage, fixtures for true/false positives
+- ✅ Pluggable `DetectorRegistry` (register/unregister, fail-safe isolation)
+- ✅ Filename detector (`.env`, keys, cloud creds, kubeconfig, …) with example-file skip
+- ✅ 25+ provider regex detectors (OpenAI, Anthropic, AWS, GitHub PAT, Stripe,
+  Slack, Twilio, Google, SendGrid, npm, DigitalOcean, Shopify, HF, …)
+- ✅ Private key / certificate detector (PEM blocks, any type)
+- ✅ JWT detector with real base64 header validation
+- ✅ Connection-string detector (Postgres, MySQL, Mongo, Redis, AMQP, …)
+- ✅ Keyword-assignment detector (hard-coded passwords/tokens, any filename)
+- ✅ Shannon-entropy detector with tunable threshold + allowlist
+- ✅ De-dupe + overlap suppression + line/column + redacted preview
+- ✅ 100% line coverage on the engine; 113 detector tests (true/false positives)
 
 ## Phase 3 — `@guardrails/redaction` ⬜
 

@@ -7,6 +7,13 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@guardrails/secret-detector':
+        specifier: workspace:*
+        version: link:packages/secret-detector
+      '@guardrails/shared':
+        specifier: workspace:*
+        version: link:packages/shared
     devDependencies:
       '@eslint/js':
         specifier: ^9.17.0
@@ -41,6 +48,12 @@ importers:
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.20.0)
+
+  packages/secret-detector:
+    dependencies:
+      '@guardrails/shared':
+        specifier: workspace:*
+        version: link:../shared
 
   packages/shared: {}
 

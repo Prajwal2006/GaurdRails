@@ -1,0 +1,26 @@
+{
+  "name": "@guardrails/secret-detector",
+  "version": "0.1.0",
+  "description": "Pluggable, multi-layer secret detection engine for Guardrails. Pure — no I/O.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json",
+    "typecheck": "tsc -b tsconfig.build.json"
+  },
+  "dependencies": {
+    "@guardrails/shared": "workspace:*"
+  }
+}
