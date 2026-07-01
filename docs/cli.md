@@ -1,6 +1,6 @@
 # CLI reference
 
-The `guardrails` command scans for secrets, explains risks, and reports — all
+The `guardrails` command scans for secrets, explains risks, and reports - all
 locally.
 
 ```bash
@@ -38,19 +38,19 @@ guardrails doctor
 
 ## Exit codes
 
-- `0` — no secrets found (or an informational command succeeded).
-- `1` — secrets were found, or a usage error occurred.
-- `2` — a path could not be scanned.
+- `0` - no secrets found (or an informational command succeeded).
+- `1` - secrets were found, or a usage error occurred.
+- `2` - a path could not be scanned.
 
 ## Options
 
-- `--json` (scan) — output findings as JSON. Values are always redacted.
-- `-l, --level <beginner|intermediate|professional>` (explain) — tailor the
+- `--json` (scan) - output findings as JSON. Values are always redacted.
+- `-l, --level <beginner|intermediate|professional>` (explain) - tailor the
   explanation to your experience.
 - `-f, --format <md|json>` and `-o, --output <file>` (report).
 
 ## Privacy
 
 Everything runs locally. Guardrails makes no network calls and collects no
-telemetry. Findings never contain the raw secret — only a location and a masked
+telemetry. Findings never contain the raw secret - only a location and a masked
 preview.

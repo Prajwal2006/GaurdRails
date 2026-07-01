@@ -2,7 +2,7 @@
   "name": "guardrails-monorepo",
   "version": "0.1.0",
   "private": true,
-  "description": "Guardrails — an AI Security Layer that keeps secrets away from AI coding assistants. Privacy-first, local-only.",
+  "description": "Guardrails - an AI Security Layer that keeps secrets away from AI coding assistants. Privacy-first, local-only.",
   "license": "MIT",
   "type": "module",
   "engines": {

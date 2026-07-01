@@ -39,7 +39,7 @@ export async function run(argv: readonly string[], io: IO = consoleIO): Promise<
   program
     .name('guardrails')
     .description(
-      '🛡️  Guardrails — keep secrets away from AI coding assistants. Local-only, privacy-first.',
+      '🛡️  Guardrails - keep secrets away from AI coding assistants. Local-only, privacy-first.',
     )
     .version('0.1.0');
 

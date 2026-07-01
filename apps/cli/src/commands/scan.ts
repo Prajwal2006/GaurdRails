@@ -13,7 +13,7 @@ function errorMessage(error: unknown): string {
 
 const SEVERITY_ORDER: readonly Severity[] = ['critical', 'high', 'medium', 'low', 'info'];
 
-/** `guardrails scan [paths...]` — scan files/directories for secrets. */
+/** `guardrails scan [paths...]` - scan files/directories for secrets. */
 export async function runScan(
   paths: readonly string[],
   options: ScanCommandOptions,
@@ -86,7 +86,7 @@ export async function runScan(
   const summary = SEVERITY_ORDER.filter((s) => counts[s] > 0)
     .map((s) => `${counts[s]} ${s}`)
     .join(', ');
-  io.out(`${icon.info} ${c.bold('Summary:')} ${summary} — scanned ${filesScanned} file(s).`);
+  io.out(`${icon.info} ${c.bold('Summary:')} ${summary} - scanned ${filesScanned} file(s).`);
   io.out(
     c.dim(`Run \`guardrails explain <type>\` to learn what a finding means and how to fix it.`),
   );

@@ -21,7 +21,7 @@ export interface AuditEventDeps {
 /**
  * Build a complete `AuditEvent` from the caller's intent, stamping it with an
  * id and ISO timestamp. Optional fields are only included when defined, to
- * satisfy `exactOptionalPropertyTypes`. This never carries a raw secret value —
+ * satisfy `exactOptionalPropertyTypes`. This never carries a raw secret value -
  * only value-free finding summaries.
  */
 export function createAuditEvent(input: AuditEventInput, deps: AuditEventDeps = {}): AuditEvent {

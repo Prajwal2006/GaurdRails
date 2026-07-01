@@ -109,7 +109,7 @@ export interface RegistryOptions {
 /**
  * A mutable collection of detectors. Register your own to extend Guardrails; the
  * registry runs them all over a piece of content and returns a clean finding
- * list. Detectors that throw are isolated — a broken detector can never crash a
+ * list. Detectors that throw are isolated - a broken detector can never crash a
  * scan (fail-safe).
  */
 export class DetectorRegistry {

@@ -5,7 +5,7 @@ const execFileAsync = promisify(execFile);
 
 /**
  * A minimal git command runner. Isolating git behind this function keeps the
- * repository logic pure and testable — tests inject a fake runner, production
+ * repository logic pure and testable - tests inject a fake runner, production
  * uses the real `git` binary. Args are always passed as an array (never a
  * shell string) so no user value is ever interpolated into a command line.
  */

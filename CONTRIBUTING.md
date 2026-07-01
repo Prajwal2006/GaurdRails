@@ -6,7 +6,7 @@ Thanks for helping keep developers' secrets safe. 🛡️
 
 1. **Never weaken the privacy guarantee.** Guardrails must never transmit user
    data or secrets off the machine, and must never collect telemetry by default.
-2. **Never log secret values.** Findings carry metadata and redacted previews —
+2. **Never log secret values.** Findings carry metadata and redacted previews -
    never the raw secret.
 3. **Fail safe.** When detection is ambiguous, prefer denying/redacting over
    leaking.
@@ -39,7 +39,7 @@ See [`docs/plugin-guide.md`](./docs/plugin-guide.md).
 
 ## Adding a new AI tool
 
-Implement the `AgentAdapter` interface. Adapters should be small — most of the
+Implement the `AgentAdapter` interface. Adapters should be small - most of the
 logic lives in the shared engine.
 
 ## Commit style

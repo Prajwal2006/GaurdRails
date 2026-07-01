@@ -1,7 +1,7 @@
-# Guardrails — Setup & Testing Guide
+# Guardrails - Setup & Testing Guide
 
 This guide covers how to set up the Guardrails monorepo, build it, and test
-every feature — with special focus on the **Phase 6 (Git protection)** and
+every feature - with special focus on the **Phase 6 (Git protection)** and
 **Phase 7 (MCP server & agent adapters)** work.
 
 Guardrails is **local-only and privacy-first**: it never transmits your code or
@@ -48,11 +48,11 @@ packages/
   secret-detector/ # detection engine
   redaction/       # structure-preserving redaction
   policy-engine/   # allow/deny/redact/audit decisions
-  audit/           # NEW  — audit sinks (memory + JSONL)
+  audit/           # NEW  - audit sinks (memory + JSONL)
   core/            # orchestration facade + fs scanning
-  adapters/        # NEW  — AI tool adapters + registry
-  git/             # NEW  — git scanning + hooks + fixes
-  mcp-server/      # NEW  — mediator + MCP JSON-RPC server + stdio
+  adapters/        # NEW  - AI tool adapters + registry
+  git/             # NEW  - git scanning + hooks + fixes
+  mcp-server/      # NEW  - mediator + MCP JSON-RPC server + stdio
 apps/
   cli/             # the `guardrails` command-line tool
 ```
@@ -67,7 +67,7 @@ All commands run from the repo root.
 pnpm run build         # tsc -b (emits dist/ for every package)
 pnpm run typecheck     # tsc -b (type-only, no manual emit needed)
 pnpm run lint          # eslint (type-checked rules)
-pnpm run test          # vitest run — the whole suite
+pnpm run test          # vitest run - the whole suite
 pnpm run test:coverage # vitest with coverage thresholds
 pnpm run check         # format:check + lint + typecheck + test (CI gate)
 ```
@@ -104,7 +104,7 @@ pnpm vitest packages/adapters
 
 ---
 
-## 4. Testing Phase 6 — Git protection
+## 4. Testing Phase 6 - Git protection
 
 The `@guardrails/git` package scans staged/tracked files, installs reversible
 git hooks, and generates educational messages + auto-fixes.
@@ -118,16 +118,16 @@ pnpm vitest run apps/cli/src/git-cli.test.ts
 
 What they cover:
 
-- **`git.test.ts`** — the git wrapper with a fake runner (no real git needed)
+- **`git.test.ts`** - the git wrapper with a fake runner (no real git needed)
   plus a **real-git integration test** that inits a temp repo, stages a file,
   and reads it back.
-- **`hooks.test.ts`** — install is **idempotent** (second run = `unchanged`),
+- **`hooks.test.ts`** - install is **idempotent** (second run = `unchanged`),
   appending to a pre-existing hook **preserves** it, and uninstall is
   **reversible** (removes only the Guardrails block).
-- **`scanner.test.ts`** — staged/tracked scanning, binary + oversized skip.
-- **`autofix.test.ts`** — `.gitignore` pattern derivation, `.env.example`
+- **`scanner.test.ts`** - staged/tracked scanning, binary + oversized skip.
+- **`autofix.test.ts`** - `.gitignore` pattern derivation, `.env.example`
   builder (keys kept, values stripped), on-disk `applyFixes`.
-- **`messages.test.ts`** — block messages **never leak** the secret value.
+- **`messages.test.ts`** - block messages **never leak** the secret value.
 
 ### 4.2 Manual end-to-end test (real repo)
 
@@ -182,13 +182,13 @@ Exit codes: `0` clean · `1` secrets found / commit blocked · `2` not a git rep
 
 ---
 
-## 5. Testing Phase 7 — MCP server & agent adapters
+## 5. Testing Phase 7 - MCP server & agent adapters
 
 Three packages work together:
 
-- **`@guardrails/adapters`** — translate each AI tool’s request/response shape.
-- **`@guardrails/audit`** — persist value-free audit events.
-- **`@guardrails/mcp-server`** — the `Mediator` (the security decision) plus an
+- **`@guardrails/adapters`** - translate each AI tool’s request/response shape.
+- **`@guardrails/audit`** - persist value-free audit events.
+- **`@guardrails/mcp-server`** - the `Mediator` (the security decision) plus an
   MCP JSON-RPC server exposing only approved files.
 
 ### 5.1 Automated tests
@@ -202,18 +202,18 @@ pnpm vitest run apps/cli/src/extra-cli.test.ts
 
 Highlights:
 
-- **`mediator.test.ts`** — a high-severity secret is **denied** (content
+- **`mediator.test.ts`** - a high-severity secret is **denied** (content
   withheld, audit records `deny`); deny/allow lists are honored; medium secrets
   are **redacted**; clean content passes through untouched; works with **no
   audit sink**.
-- **`server.test.ts`** — full protocol: `initialize`, `tools/list`,
+- **`server.test.ts`** - full protocol: `initialize`, `tools/list`,
   `tools/call` for `read_file` and `list_files`; a file with a secret is
   withheld and **never leaked**; `list_files` omits denied files.
-- **`file-source.test.ts`** — path-traversal is refused (`../../etc/passwd`
+- **`file-source.test.ts`** - path-traversal is refused (`../../etc/passwd`
   → undefined), ignored dirs skipped.
-- **`stdio.test.ts`** — newline-delimited JSON-RPC over a stream, parse errors
+- **`stdio.test.ts`** - newline-delimited JSON-RPC over a stream, parse errors
   handled, notifications stay silent.
-- **`audit/*`** — JSONL sink round-trips, tolerates corrupt lines, honors limit.
+- **`audit/*`** - JSONL sink round-trips, tolerates corrupt lines, honors limit.
 
 ### 5.2 Manual end-to-end test (MCP over stdio)
 
@@ -282,7 +282,7 @@ to your client’s MCP config pointing at the built binary:
 ```
 
 Once connected, the client sees only `read_file` and `list_files`, and every
-file it requests is mediated by Guardrails — secrets are redacted or withheld,
+file it requests is mediated by Guardrails - secrets are redacted or withheld,
 and each decision is audited.
 
 ---
@@ -318,15 +318,15 @@ Guarantees enforced (and tested):
 
 | Symptom                                      | Fix                                                                             |
 | -------------------------------------------- | ------------------------------------------------------------------------------- |
-| `format:check` flags every file (Windows)    | CRLF checkout — run `pnpm run format` or `git config core.autocrlf input`.      |
+| `format:check` flags every file (Windows)    | CRLF checkout - run `pnpm run format` or `git config core.autocrlf input`.      |
 | `git` tests skip / “not a git repository”    | Install git and ensure it’s on `PATH` (`git --version`).                        |
-| `mcp serve` seems to hang                    | Expected — it reads stdin until closed. Pipe input or Ctrl-D/Ctrl-C.            |
+| `mcp serve` seems to hang                    | Expected - it reads stdin until closed. Pipe input or Ctrl-D/Ctrl-C.            |
 | MCP client shows nothing                     | Use an **absolute** path to `apps/cli/dist/main.js` and `pnpm run build` first. |
 | Coverage threshold failure after adding code | Add tests, or run `pnpm run test:coverage` to see uncovered lines.              |
 
 ---
 
-## 8. Quick reference — full local verification
+## 8. Quick reference - full local verification
 
 ```bash
 pnpm install

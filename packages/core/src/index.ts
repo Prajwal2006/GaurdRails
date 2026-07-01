@@ -1,5 +1,5 @@
 /**
- * @guardrails/core — the orchestration layer. Composes detection, policy, and
+ * @guardrails/core - the orchestration layer. Composes detection, policy, and
  * redaction into a single `Guardrails` facade, hosts the educational content
  * catalog, and provides filesystem scanning.
  */

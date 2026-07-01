@@ -33,7 +33,7 @@ exhaustively testable.
 
 | Package                       | Responsibility                                         | Depends on                         |
 | ----------------------------- | ------------------------------------------------------ | ---------------------------------- |
-| `@guardrails/shared`          | Types, interfaces, `Result`, educational content model | —                                  |
+| `@guardrails/shared`          | Types, interfaces, `Result`, educational content model | -                                  |
 | `@guardrails/secret-detector` | Pluggable multi-layer detection engine                 | shared                             |
 | `@guardrails/redaction`       | Structure-preserving value redaction                   | shared                             |
 | `@guardrails/policy-engine`   | Allow/deny/redact/audit decisions with inheritance     | shared                             |
@@ -44,13 +44,13 @@ exhaustively testable.
 ## Key design decisions
 
 - **Pure domain core.** No filesystem or network access inside `secret-detector`
-  — callers pass content in, findings come out. This makes the engine trivial to
+  - callers pass content in, findings come out. This makes the engine trivial to
   fuzz and unit-test, and safe to run anywhere.
 - **Everything behind interfaces.** Detectors, adapters, policies, reporters, and
   notifiers are all pluggable. Third parties extend Guardrails without forking it.
 - **Fail safe by default.** The default policy denies known-sensitive files and
   redacts ambiguous content.
-- **No I/O of secrets.** Findings never carry the raw secret — only its location,
+- **No I/O of secrets.** Findings never carry the raw secret - only its location,
   a classification, and a redacted preview.
 
 ## Data flow (a scan)

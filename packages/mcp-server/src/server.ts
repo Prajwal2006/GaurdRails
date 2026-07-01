@@ -61,7 +61,7 @@ function responseToToolContent(response: MediatedResponse): ToolContent {
 }
 
 /**
- * An MCP server that exposes exactly two tools — `read_file` and `list_files` —
+ * An MCP server that exposes exactly two tools - `read_file` and `list_files` -
  * both mediated by Guardrails so an AI client can only ever see approved,
  * secret-free content. Transport-agnostic: feed it parsed messages via
  * `handle`; see `serveStdio` for the stdio transport.

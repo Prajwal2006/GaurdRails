@@ -13,7 +13,7 @@ export const consoleIO: IO = {
   },
 };
 
-/** Collects output in memory — used by tests. */
+/** Collects output in memory - used by tests. */
 export function createBufferIO(): IO & { readonly stdout: string[]; readonly stderr: string[] } {
   const stdout: string[] = [];
   const stderr: string[] = [];

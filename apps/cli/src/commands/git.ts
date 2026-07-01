@@ -29,7 +29,7 @@ async function openRepo(io: IO): Promise<GitRepo | undefined> {
   }
 }
 
-/** `guardrails git install` — install pre-commit and pre-push hooks. */
+/** `guardrails git install` - install pre-commit and pre-push hooks. */
 export async function runGitInstall(io: IO): Promise<number> {
   const repo = await openRepo(io);
   if (repo === undefined) return 2;
@@ -44,7 +44,7 @@ export async function runGitInstall(io: IO): Promise<number> {
   return 0;
 }
 
-/** `guardrails git uninstall` — remove Guardrails hooks, preserving others. */
+/** `guardrails git uninstall` - remove Guardrails hooks, preserving others. */
 export async function runGitUninstall(io: IO): Promise<number> {
   const repo = await openRepo(io);
   if (repo === undefined) return 2;
@@ -57,7 +57,7 @@ export async function runGitUninstall(io: IO): Promise<number> {
   return 0;
 }
 
-/** `guardrails git status` — show hook installation status. */
+/** `guardrails git status` - show hook installation status. */
 export async function runGitStatus(io: IO): Promise<number> {
   const repo = await openRepo(io);
   if (repo === undefined) return 2;
@@ -67,7 +67,7 @@ export async function runGitStatus(io: IO): Promise<number> {
   for (const s of statuses) {
     const mark = s.managed ? c.green(icon.check) : c.yellow(icon.warn);
     const state = s.managed ? 'installed' : s.exists ? 'present (not managed)' : 'not installed';
-    io.out(`  ${mark} ${s.hook} ${c.gray(`— ${state}`)}`);
+    io.out(`  ${mark} ${s.hook} ${c.gray(`- ${state}`)}`);
   }
   return 0;
 }
@@ -134,17 +134,17 @@ async function runScan(
   return 1;
 }
 
-/** `guardrails git scan` — scan the staged changeset. */
+/** `guardrails git scan` - scan the staged changeset. */
 export function runGitScan(options: ScanCommandOptions, io: IO): Promise<number> {
   return runScan('staged', options, io);
 }
 
-/** `guardrails git check` — scan every tracked file. */
+/** `guardrails git check` - scan every tracked file. */
 export function runGitCheck(options: ScanCommandOptions, io: IO): Promise<number> {
   return runScan('tracked', options, io);
 }
 
-/** `guardrails git fix` — apply safe, reversible fixes (.gitignore, .env.example). */
+/** `guardrails git fix` - apply safe, reversible fixes (.gitignore, .env.example). */
 export async function runGitFix(io: IO): Promise<number> {
   const repo = await openRepo(io);
   if (repo === undefined) return 2;
@@ -167,7 +167,7 @@ export async function runGitFix(io: IO): Promise<number> {
 }
 
 /**
- * `guardrails git pre-commit` / `pre-push` — the hook entry points. Returns a
+ * `guardrails git pre-commit` / `pre-push` - the hook entry points. Returns a
  * non-zero code to abort the git operation when secrets are found.
  */
 export async function runGitHook(hook: GitHook, io: IO): Promise<number> {

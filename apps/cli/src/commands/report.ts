@@ -10,7 +10,7 @@ export interface ReportCommandOptions {
   readonly output?: string;
 }
 
-/** Build a Markdown report from scan results. Pure — easy to test. */
+/** Build a Markdown report from scan results. Pure - easy to test. */
 export function buildMarkdownReport(files: readonly FileScan[], filesScanned: number): string {
   const findings = files.flatMap((f) => f.result.findings);
   const lines: string[] = [];
@@ -30,7 +30,7 @@ export function buildMarkdownReport(files: readonly FileScan[], filesScanned: nu
     lines.push('| Severity | Type | Location | Decision | Preview |');
     lines.push('| --- | --- | --- | --- | --- |');
     for (const { finding, decision } of file.result.decided) {
-      const loc = finding.line ? `L${finding.line}` : '—';
+      const loc = finding.line ? `L${finding.line}` : '-';
       lines.push(
         `| ${finding.severity} | ${finding.title} | ${loc} | ${decision.action} | \`${finding.redactedPreview}\` |`,
       );
@@ -47,7 +47,7 @@ export function buildMarkdownReport(files: readonly FileScan[], filesScanned: nu
   return lines.join('\n');
 }
 
-/** `guardrails report [paths...]` — generate a Markdown or JSON report. */
+/** `guardrails report [paths...]` - generate a Markdown or JSON report. */
 export async function runReport(
   paths: readonly string[],
   options: ReportCommandOptions,

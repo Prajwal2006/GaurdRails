@@ -2,7 +2,7 @@ import { AdapterRegistry } from '@guardrails/adapters';
 import type { IO } from '../io.js';
 import { c, heading, icon } from '../ui.js';
 
-/** `guardrails adapters` — list the AI tools Guardrails can mediate. */
+/** `guardrails adapters` - list the AI tools Guardrails can mediate. */
 export function runAdapters(io: IO): number {
   const registry = AdapterRegistry.withDefaults();
   io.out(heading('Supported AI tools'));

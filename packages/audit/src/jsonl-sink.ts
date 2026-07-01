@@ -33,7 +33,7 @@ export class JsonlAuditSink implements AuditSink {
       try {
         events.push(JSON.parse(line) as AuditEvent);
       } catch {
-        // A corrupt line should never crash the reader — skip it.
+        // A corrupt line should never crash the reader - skip it.
       }
     }
     events.reverse(); // most recent first

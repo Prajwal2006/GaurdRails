@@ -1,5 +1,5 @@
 /**
- * @guardrails/mcp-server — a Model Context Protocol server that mediates AI
+ * @guardrails/mcp-server - a Model Context Protocol server that mediates AI
  * file access through Guardrails. Exposes only approved, secret-free files and
  * records a value-free audit trail of every decision.
  */

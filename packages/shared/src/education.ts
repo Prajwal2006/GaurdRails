@@ -1,6 +1,6 @@
 /**
  * The educational content model. One of Guardrails' most important features is
- * explaining risk in language a beginner understands — without ever shaming the
+ * explaining risk in language a beginner understands - without ever shaming the
  * user. Explanations are keyed by id and tailored to experience level.
  */
 

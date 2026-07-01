@@ -1,7 +1,7 @@
 {
   "name": "@guardrails/secret-detector",
   "version": "0.1.0",
-  "description": "Pluggable, multi-layer secret detection engine for Guardrails. Pure — no I/O.",
+  "description": "Pluggable, multi-layer secret detection engine for Guardrails. Pure - no I/O.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

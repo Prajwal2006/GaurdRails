@@ -1,5 +1,5 @@
 /**
- * @guardrails/audit — persistence for value-free audit events. Provides an
+ * @guardrails/audit - persistence for value-free audit events. Provides an
  * in-memory sink for tests and a JSONL file sink for real use. The sink
  * interface itself lives in `@guardrails/shared`.
  */

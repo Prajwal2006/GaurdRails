@@ -26,7 +26,7 @@ export function formatBlockMessage(result: GitScanResult, hook: GitHook): string
   lines.push(
     `Found ${count} potential secret${count === 1 ? '' : 's'} in ${result.files.length} file${
       result.files.length === 1 ? '' : 's'
-    }. Committing secrets can expose them to anyone with repo access — and to AI tools that read your code.`,
+    }. Committing secrets can expose them to anyone with repo access - and to AI tools that read your code.`,
   );
   lines.push('');
 
@@ -35,7 +35,7 @@ export function formatBlockMessage(result: GitScanResult, hook: GitHook): string
     for (const { finding, decision } of file.result.decided) {
       const loc = finding.line === undefined ? '' : `:${finding.line}`;
       lines.push(
-        `    [${finding.severity.toUpperCase()}] ${finding.title}${loc} — ${decision.action} (${finding.redactedPreview})`,
+        `    [${finding.severity.toUpperCase()}] ${finding.title}${loc} - ${decision.action} (${finding.redactedPreview})`,
       );
     }
   }

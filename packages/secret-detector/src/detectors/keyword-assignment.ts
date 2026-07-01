@@ -19,8 +19,8 @@ interface WithIndices {
 
 /**
  * Detects `KEY = value` assignments where the key name implies a secret. This is
- * the safety net that catches things no provider rule knows about — a database
- * password, a bespoke internal token, a passphrase — regardless of filename.
+ * the safety net that catches things no provider rule knows about - a database
+ * password, a bespoke internal token, a passphrase - regardless of filename.
  */
 export const keywordAssignmentDetector: Detector = {
   id: 'keyword-assignment',

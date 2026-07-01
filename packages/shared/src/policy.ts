@@ -4,10 +4,10 @@ import type { AgentId } from './adapter.js';
 
 /**
  * What Guardrails decides to do with a request or a finding.
- * - `allow` / `allow-once`  — expose the content (once = not remembered).
- * - `deny` / `always-deny`  — withhold the content (always = persist the rule).
- * - `redact`                — expose with secret values masked.
- * - `audit-only`            — expose, but record the event.
+ * - `allow` / `allow-once`  - expose the content (once = not remembered).
+ * - `deny` / `always-deny`  - withhold the content (always = persist the rule).
+ * - `redact`                - expose with secret values masked.
+ * - `audit-only`            - expose, but record the event.
  */
 export const DECISION_ACTIONS = [
   'allow',

@@ -16,7 +16,7 @@ interface FilenameRule {
   readonly test: (basename: string, path: string) => boolean;
 }
 
-/** Example/sample/template files are safe to expose — never flag them. */
+/** Example/sample/template files are safe to expose - never flag them. */
 export function isExampleFile(basename: string): boolean {
   return /(?:^|[._-])(?:example|sample|template|dist|tmpl|placeholder)(?:\.[^.]+)?$/i.test(
     basename,

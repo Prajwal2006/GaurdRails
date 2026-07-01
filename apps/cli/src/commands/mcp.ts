@@ -23,7 +23,7 @@ export interface McpServeOptions {
 }
 
 /**
- * `guardrails mcp serve [root]` — run the MCP server on stdio. stdout is the
+ * `guardrails mcp serve [root]` - run the MCP server on stdio. stdout is the
  * JSON-RPC channel, so all human-facing output goes to stderr.
  */
 export async function runMcpServe(options: McpServeOptions, io: IO): Promise<number> {
@@ -43,7 +43,7 @@ export async function runMcpServe(options: McpServeOptions, io: IO): Promise<num
     ...(options.tool !== undefined ? { tool: options.tool } : {}),
   });
 
-  io.err(`${icon.shield} Guardrails MCP server on stdio — serving ${root}`);
+  io.err(`${icon.shield} Guardrails MCP server on stdio - serving ${root}`);
   io.err(
     c.dim(`Protocol ${PROTOCOL_VERSION}. Audit: ${options.noAudit === true ? 'off' : auditPath}`),
   );
@@ -51,7 +51,7 @@ export async function runMcpServe(options: McpServeOptions, io: IO): Promise<num
   return 0;
 }
 
-/** `guardrails mcp info` — describe the server without starting it. */
+/** `guardrails mcp info` - describe the server without starting it. */
 export function runMcpInfo(io: IO): number {
   io.out(heading('Guardrails MCP server'));
   io.out('');

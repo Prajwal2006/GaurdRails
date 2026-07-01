@@ -11,7 +11,7 @@ export interface AuditCommandOptions {
   readonly file?: string;
 }
 
-/** `guardrails audit` — show the value-free audit log. */
+/** `guardrails audit` - show the value-free audit log. */
 export function runAudit(options: AuditCommandOptions, io: IO): number {
   const path = options.file ?? join(process.cwd(), CONFIG_DIR, AUDIT_FILE);
   const sink = new JsonlAuditSink(path);

@@ -111,7 +111,7 @@ export function installHook(hooksDir: string, hook: GitHook): HookInstallResult 
     return { hook, path, status: 'updated' };
   }
 
-  // Existing hook without our block — preserve it and append ours.
+  // Existing hook without our block - preserve it and append ours.
   const separator = existing.endsWith('\n') ? '' : '\n';
   writeFileSync(path, `${existing}${separator}${block}\n`, 'utf8');
   makeExecutable(path);
@@ -162,6 +162,6 @@ function makeExecutable(path: string): void {
   try {
     chmodSync(path, 0o755);
   } catch {
-    // chmod is a no-op / unsupported on some platforms (e.g. Windows) — ignore.
+    // chmod is a no-op / unsupported on some platforms (e.g. Windows) - ignore.
   }
 }

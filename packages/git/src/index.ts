@@ -1,5 +1,5 @@
 /**
- * @guardrails/git — git protection. Scans staged/tracked files through the
+ * @guardrails/git - git protection. Scans staged/tracked files through the
  * Guardrails engine, installs reversible pre-commit/pre-push hooks, and
  * produces educational block messages with auto-fix suggestions.
  */

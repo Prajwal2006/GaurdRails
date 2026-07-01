@@ -3,7 +3,7 @@ import { makeRegexDetectors, type RegexRule } from './factory.js';
 
 /**
  * Provider-specific detectors. Each rule targets a documented key format so it
- * fires with high confidence and few false positives. Add new providers here —
+ * fires with high confidence and few false positives. Add new providers here -
  * that is all it takes to teach Guardrails a new key shape.
  */
 export const providerRules: readonly RegexRule[] = [

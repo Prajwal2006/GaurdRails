@@ -39,12 +39,12 @@ export default tseslint.config(
     },
   },
   {
-    // Config files are plain JS with an inferred project — skip type-aware rules.
+    // Config files are plain JS with an inferred project - skip type-aware rules.
     files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
     ...tseslint.configs.disableTypeChecked,
   },
   {
-    // Plain JS/ESM files (examples, config) run on Node — provide Node globals.
+    // Plain JS/ESM files (examples, config) run on Node - provide Node globals.
     files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
     languageOptions: {
       globals: {

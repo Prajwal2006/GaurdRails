@@ -12,7 +12,7 @@ import { createAuditEvent } from '@guardrails/audit';
 export interface MediatorOptions {
   /** The engine that detects + decides. Defaults to a fresh `Guardrails`. */
   readonly guardrails?: Guardrails;
-  /** Where to record decisions. Optional — omit to skip audit logging. */
+  /** Where to record decisions. Optional - omit to skip audit logging. */
   readonly audit?: AuditSink;
   /** Globs that are always allowed without inspection (e.g. `src/**`). */
   readonly allow?: readonly string[];
@@ -30,7 +30,7 @@ function anyMatch(globs: readonly string[], path: string): boolean {
  * The heart of Phase 7: decides what an AI tool may see for a given file. It
  * consults deny/allow lists first, then runs the Guardrails engine, and records
  * a value-free audit event for every non-trivial decision. It never returns a
- * raw secret — denied content is withheld and redactable content is masked.
+ * raw secret - denied content is withheld and redactable content is masked.
  */
 export class Mediator {
   private readonly guardrails: Guardrails;

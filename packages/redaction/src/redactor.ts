@@ -38,7 +38,7 @@ interface Span {
  * Replace every detected secret span in `content` with a redaction token,
  * preserving the surrounding structure (so `KEY=secret` becomes
  * `KEY=<REDACTED>`). Overlapping findings are collapsed. File-level findings
- * (those without a content location) are ignored here — there is nothing in the
+ * (those without a content location) are ignored here - there is nothing in the
  * text to replace.
  *
  * Security invariant: the returned content never contains the original value of

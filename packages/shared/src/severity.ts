@@ -21,7 +21,7 @@ export function severityRank(severity: Severity): number {
 
 /**
  * Compare two severities. Returns a negative number if `a` is less severe than
- * `b`, positive if more severe, and 0 if equal — suitable for `Array#sort`.
+ * `b`, positive if more severe, and 0 if equal - suitable for `Array#sort`.
  */
 export function compareSeverity(a: Severity, b: Severity): number {
   return SEVERITY_RANK[a] - SEVERITY_RANK[b];

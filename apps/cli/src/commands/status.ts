@@ -3,7 +3,7 @@ import type { IO } from '../io.js';
 import { c, heading, icon } from '../ui.js';
 import { loadConfig } from '../config.js';
 
-/** `guardrails status` — show the current configuration at a glance. */
+/** `guardrails status` - show the current configuration at a glance. */
 export async function runStatus(io: IO): Promise<number> {
   const { config, path } = await loadConfig();
   io.out(heading('Guardrails status'));

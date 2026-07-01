@@ -54,7 +54,7 @@ export function buildEnvExample(envContent: string): string {
     .join('\n');
 }
 
-/** Build human-facing suggestions for a scan result. Pure — no I/O. */
+/** Build human-facing suggestions for a scan result. Pure - no I/O. */
 export function suggestFixes(result: GitScanResult): AutoFixSuggestion[] {
   const suggestions: AutoFixSuggestion[] = [];
   const paths = result.files.map((f) => f.path);

@@ -17,35 +17,35 @@ _AI should have access to code, not secrets._
 Guardrails sits between AI coding assistants (Claude Code, Codex, Copilot, Gemini
 CLI, Cursor, Windsurf, …) and your project. It **detects secrets regardless of
 filename**, **redacts sensitive values**, **blocks risky Git commits**, and
-**explains the risk in language beginners understand** — all **100% locally**.
+**explains the risk in language beginners understand** - all **100% locally**.
 No data ever leaves your machine.
 
 ## Why
 
 AI assistants are wonderful at reading your code. The problem is they read
-_everything_ — including your `.env`, your `id_rsa`, your cloud credentials. One
+_everything_ - including your `.env`, your `id_rsa`, your cloud credentials. One
 careless prompt or one over-eager agent and a live production secret ends up in
 a model's context window, a log, or a commit. Guardrails is the seatbelt: it
 lets AI see your code while keeping the keys in your pocket.
 
 ## Features
 
-- 🔎 **Multi-layer secret detection** — filename rules, provider-specific regexes
+- 🔎 **Multi-layer secret detection** - filename rules, provider-specific regexes
   (OpenAI, Anthropic, AWS, GitHub, Stripe, Slack, Twilio, Google, …), private-key
   and JWT detection, connection strings, and Shannon-entropy analysis.
-- ✂️ **Redaction engine** — replaces values with `<REDACTED>` while preserving
+- ✂️ **Redaction engine** - replaces values with `<REDACTED>` while preserving
   file structure, so AI still gets useful context.
-- 📜 **Policy engine** — allow/deny/redact/audit rules per project, folder, file,
+- 📜 **Policy engine** - allow/deny/redact/audit rules per project, folder, file,
   extension, AI tool, user, or organization, with inheritance.
-- 🪝 **Git protection** — auto-installed pre-commit / pre-push hooks that stop
+- 🪝 **Git protection** - auto-installed pre-commit / pre-push hooks that stop
   secrets before they are ever pushed.
-- 🔌 **MCP server & agent adapters** — expose only approved files to AI tools
+- 🔌 **MCP server & agent adapters** - expose only approved files to AI tools
   through a common, pluggable interface.
-- 🎓 **Beginner-friendly education** — every block explains _what happened, why it
+- 🎓 **Beginner-friendly education** - every block explains _what happened, why it
   matters, and how to fix it_, at your chosen experience level.
-- 🕵️ **Audit log & reports** — Markdown / HTML / JSON / PDF, and never stores the
+- 🕵️ **Audit log & reports** - Markdown / HTML / JSON / PDF, and never stores the
   secret itself.
-- 🏢 **Enterprise-ready by design** — RBAC, SSO, org policies, and audit exports
+- 🏢 **Enterprise-ready by design** - RBAC, SSO, org policies, and audit exports
   are architected in from day one (and disabled by default).
 
 ## Repository layout
@@ -113,4 +113,4 @@ pnpm test:coverage   # with coverage (core security modules target ≥ 90%)
 
 ## License
 
-[MIT](./LICENSE) — free to use, modify, and distribute.
+[MIT](./LICENSE) - free to use, modify, and distribute.

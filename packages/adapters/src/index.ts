@@ -1,5 +1,5 @@
 /**
- * @guardrails/adapters — thin translators between specific AI coding tools and
+ * @guardrails/adapters - thin translators between specific AI coding tools and
  * Guardrails' neutral request/response shape. Adapters contain no security
  * logic; they only translate formats.
  */

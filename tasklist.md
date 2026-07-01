@@ -1,4 +1,4 @@
-# Guardrails — Build Task List
+# Guardrails - Build Task List
 
 This is the living plan and progress tracker for Guardrails. It is organised by
 phase. Each phase ships **cohesive, tested, production-quality code** before the
@@ -6,7 +6,7 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 
 ---
 
-## Phase 0 — Foundation & tooling ✅
+## Phase 0 - Foundation & tooling ✅
 
 - ✅ pnpm workspaces monorepo (`packages/*`, `apps/*`)
 - ✅ TypeScript strict base config + project references (lint/build split)
@@ -16,18 +16,18 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 - ✅ `.gitignore` that dogfoods our own secret list
 - ✅ `pnpm install` + green `pnpm run check`
 
-## Phase 1 — `@guardrails/shared` (the contract) ✅
+## Phase 1 - `@guardrails/shared` (the contract) ✅
 
 - ✅ Domain types: `Severity`, `Confidence`, `Finding`, `FindingSummary`
 - ✅ Detector interfaces: `Detector`, `DetectionContext`, `FindingSpec`
 - ✅ Policy types: `Policy`, `PolicyRule`, `Scope`, `Decision`, `DecisionAction`
 - ✅ Adapter interface: `AgentAdapter`, `FileReadRequest`, `MediatedResponse`
-- ✅ Audit event types (`AuditEvent`, `AuditSink`) — never contain secret values
+- ✅ Audit event types (`AuditEvent`, `AuditSink`) - never contain secret values
 - ✅ `Result<T, E>` helper + masking primitives (`maskSecret`, `previewSecret`)
 - ✅ Educational content model (`Explanation`, `ExperienceLevel`)
 - ✅ 32 unit tests incl. the "masking never leaks a full value" invariant
 
-## Phase 2 — `@guardrails/secret-detector` ✅
+## Phase 2 - `@guardrails/secret-detector` ✅
 
 - ✅ Pluggable `DetectorRegistry` (register/unregister, fail-safe isolation)
 - ✅ Filename detector (`.env`, keys, cloud creds, kubeconfig, …) with example-file skip
@@ -41,15 +41,15 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 - ✅ De-dupe + overlap suppression + line/column + redacted preview
 - ✅ 100% line coverage on the engine; 113 detector tests (true/false positives)
 
-## Phase 3 — `@guardrails/redaction` ✅
+## Phase 3 - `@guardrails/redaction` ✅
 
 - ✅ Structure-preserving redaction (`KEY=<REDACTED>`) via detected spans
 - ✅ Overlap collapsing + input-order-independent sorting
-- ✅ Partial reveal option (`sk-********`) — off by default
+- ✅ Partial reveal option (`sk-********`) - off by default
 - ✅ Custom flat token and per-finding token overrides; `Redactor` class
 - ✅ Tests (13): never leaks the original value; ignores file-level findings
 
-## Phase 4 — `@guardrails/policy-engine` ✅
+## Phase 4 - `@guardrails/policy-engine` ✅
 
 - ✅ Policy schema + loader with a hand-rolled, dependency-free validator
   (`parsePolicy` / `parsePolicyJson` → `Result`)
@@ -61,7 +61,7 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
   allow code) + severity-based fail-safe fallback
 - ✅ `PolicyEngine.evaluate` / `evaluateFindings`; 44 tests, 100% line coverage
 
-## Phase 5 — `@guardrails/core` + `guardrails` CLI ✅
+## Phase 5 - `@guardrails/core` + `guardrails` CLI ✅
 
 - ✅ `@guardrails/core` facade composing detection + policy + redaction
   (`Guardrails.inspect` / `.redact`, worst-outcome verdict)
@@ -74,10 +74,10 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 - ✅ Testable command layer (IO abstraction); 33 CLI/core tests; verified by
   running the built binary end-to-end
 
-## Phase 6 — Git protection ✅
+## Phase 6 - Git protection ✅
 
 - ✅ `@guardrails/git` package (staged + repo scanning, hook management)
-- ✅ Hook installer (pre-commit, pre-push) — idempotent, reversible, preserves
+- ✅ Hook installer (pre-commit, pre-push) - idempotent, reversible, preserves
   any pre-existing hook content (begin/end marker block)
 - ✅ Staged-file scanner (`scanStaged`) + repo scanner (`scanTracked`), binary /
   oversized skip, worst-outcome verdict, blocked flag
@@ -86,13 +86,13 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 - ✅ CLI: `guardrails git install|uninstall|status|scan|check|fix|pre-commit|pre-push`
 - ✅ 44 tests incl. real-git integration; secrets never leaked in messages
 
-## Phase 7 — MCP server & agent adapters ✅
+## Phase 7 - MCP server & agent adapters ✅
 
-- ✅ `@guardrails/adapters` — `AgentAdapter` implementations (Claude Code, Codex,
+- ✅ `@guardrails/adapters` - `AgentAdapter` implementations (Claude Code, Codex,
   Copilot, Gemini CLI, Cursor, Windsurf) + `AdapterRegistry`, shared normalizer
-- ✅ `@guardrails/audit` — `AuditSink` implementations (`MemoryAuditSink`,
+- ✅ `@guardrails/audit` - `AuditSink` implementations (`MemoryAuditSink`,
   `JsonlAuditSink`) + value-free `createAuditEvent`
-- ✅ `@guardrails/mcp-server` — `Mediator` (allow/deny lists + Guardrails engine +
+- ✅ `@guardrails/mcp-server` - `Mediator` (allow/deny lists + Guardrails engine +
   audit logging), MCP `McpServer` (JSON-RPC 2.0: initialize/tools) exposing only
   `read_file` / `list_files`, stdio transport, path-traversal-guarded file source
 - ✅ CLI: `guardrails mcp serve|info`, `guardrails adapters`, `guardrails audit`

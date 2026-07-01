@@ -2,7 +2,7 @@ import type { Explanation, ExplanationCatalog, Finding, SecretCategory } from '@
 
 /**
  * The educational content catalog. Every explanation speaks to three experience
- * levels and never shames the user — leaking a secret is easy to do by accident.
+ * levels and never shames the user - leaking a secret is easy to do by accident.
  * Content is keyed by secret category so every finding can be explained.
  */
 const CATALOG: Record<SecretCategory, Explanation> = {
@@ -11,7 +11,7 @@ const CATALOG: Record<SecretCategory, Explanation> = {
     title: 'API key',
     what: {
       beginner:
-        'This looks like an API key — a password your code uses to talk to another service (like OpenAI or Stripe).',
+        'This looks like an API key - a password your code uses to talk to another service (like OpenAI or Stripe).',
       intermediate:
         'A provider API key was found. Anyone holding it can call that API as you, on your account.',
       professional:
@@ -19,7 +19,7 @@ const CATALOG: Record<SecretCategory, Explanation> = {
     },
     why: {
       beginner:
-        "If someone else gets this key, they can use that service and you'll get the bill — a bit like sharing your house key.",
+        "If someone else gets this key, they can use that service and you'll get the bill - a bit like sharing your house key.",
       intermediate:
         'Leaked keys are routinely scraped from repos and abused within minutes, leading to unexpected charges or data access.',
       professional:
@@ -27,7 +27,7 @@ const CATALOG: Record<SecretCategory, Explanation> = {
     },
     fix: [
       'Move the key into an environment variable and read it with process.env.',
-      'Rotate (regenerate) the key with the provider — assume the old one is burned.',
+      'Rotate (regenerate) the key with the provider - assume the old one is burned.',
       'Add the file that held it to .gitignore, and provide a .env.example without real values.',
     ],
     prevent: [
@@ -69,14 +69,14 @@ const CATALOG: Record<SecretCategory, Explanation> = {
     id: 'private-key',
     title: 'Private key',
     what: {
-      beginner: 'This is a private key — the secret half of a cryptographic key pair.',
+      beginner: 'This is a private key - the secret half of a cryptographic key pair.',
       intermediate:
         'A PEM private key was found. It can decrypt data or impersonate a server/identity.',
       professional:
         'A private key (RSA/EC/OPENSSH/PGP) was detected. Anything it signs or decrypts is now at risk.',
     },
     why: {
-      beginner: "The private key is meant to stay secret — it's like the master key to a lock.",
+      beginner: "The private key is meant to stay secret - it's like the master key to a lock.",
       intermediate:
         'With the private key, an attacker can impersonate you, decrypt traffic, or forge signatures.',
       professional:
@@ -97,7 +97,7 @@ const CATALOG: Record<SecretCategory, Explanation> = {
     id: 'ssh-key',
     title: 'SSH private key',
     what: {
-      beginner: 'This looks like an SSH private key — what your computer uses to log into servers.',
+      beginner: 'This looks like an SSH private key - what your computer uses to log into servers.',
       intermediate:
         'An SSH private key was found. It grants access to any host trusting its public half.',
       professional:
@@ -209,7 +209,7 @@ const CATALOG: Record<SecretCategory, Explanation> = {
       professional: 'A hard-coded password was detected; treat it as compromised.',
     },
     why: {
-      beginner: 'Passwords in code can be read by anyone who sees the file — including AI tools.',
+      beginner: 'Passwords in code can be read by anyone who sees the file - including AI tools.',
       intermediate:
         'Hard-coded passwords are easily leaked and hard to rotate across environments.',
       professional:
@@ -230,7 +230,7 @@ const CATALOG: Record<SecretCategory, Explanation> = {
     id: 'token',
     title: 'Access token',
     what: {
-      beginner: 'This looks like an access token — like a temporary password for a service.',
+      beginner: 'This looks like an access token - like a temporary password for a service.',
       intermediate:
         'An access token was found; it can act on your behalf until revoked or expired.',
       professional:
@@ -283,7 +283,7 @@ const CATALOG: Record<SecretCategory, Explanation> = {
     id: 'cookie',
     title: 'Session cookie',
     what: {
-      beginner: 'This looks like a session cookie — a token that keeps you logged in.',
+      beginner: 'This looks like a session cookie - a token that keeps you logged in.',
       intermediate: 'A session cookie value was found; it may allow session hijacking.',
       professional: 'A session cookie was detected; if valid, it enables session replay.',
     },
@@ -308,14 +308,14 @@ const CATALOG: Record<SecretCategory, Explanation> = {
     id: 'generic-secret',
     title: 'Possible secret',
     what: {
-      beginner: 'This looks like it might be a secret — a random-looking value.',
+      beginner: 'This looks like it might be a secret - a random-looking value.',
       intermediate: 'A high-entropy or secret-like value was found; it may be sensitive.',
       professional: 'A likely secret was detected heuristically; confirm and handle accordingly.',
     },
     why: {
       beginner: 'If it is a secret, keeping it in code is risky.',
       intermediate: 'Even unrecognized secrets are dangerous once leaked; verify before ignoring.',
-      professional: 'Heuristic matches can be false positives — verify, then rotate if real.',
+      professional: 'Heuristic matches can be false positives - verify, then rotate if real.',
     },
     fix: [
       'Confirm whether this is a real secret.',
