@@ -49,13 +49,17 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 - ✅ Custom flat token and per-finding token overrides; `Redactor` class
 - ✅ Tests (13): never leaks the original value; ignores file-level findings
 
-## Phase 4 — `@guardrails/policy-engine` ⬜
+## Phase 4 — `@guardrails/policy-engine` ✅
 
-- ⬜ Policy schema + loader (JSON/YAML) with Zod validation
-- ⬜ Scope matching (project/folder/file/glob/extension/tool/user)
-- ⬜ Rule precedence + inheritance + deterministic resolution
-- ⬜ Default fail-safe policy (deny sensitive, redact ambiguous)
-- ⬜ Tests: precedence, inheritance, conflicts
+- ✅ Policy schema + loader with a hand-rolled, dependency-free validator
+  (`parsePolicy` / `parsePolicyJson` → `Result`)
+- ✅ Scope matching: project / glob path / extension / tool / user / org
+  (tiny auditable glob matcher supporting `*`, `**`, `?`)
+- ✅ Rule precedence (priority, own-wins-ties) + `extends` inheritance with
+  cycle guard + deterministic resolution
+- ✅ Default fail-safe policy (deny sensitive/high, redact medium, audit low,
+  allow code) + severity-based fail-safe fallback
+- ✅ `PolicyEngine.evaluate` / `evaluateFindings`; 44 tests, 100% line coverage
 
 ## Phase 5 — `guardrails` CLI ⬜
 

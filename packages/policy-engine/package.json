@@ -1,0 +1,26 @@
+{
+  "name": "@guardrails/policy-engine",
+  "version": "0.1.0",
+  "description": "Deterministic allow/deny/redact/audit policy evaluation with scope matching and inheritance.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json",
+    "typecheck": "tsc -b tsconfig.build.json"
+  },
+  "dependencies": {
+    "@guardrails/shared": "workspace:*"
+  }
+}
