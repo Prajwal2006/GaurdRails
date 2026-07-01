@@ -11,6 +11,7 @@ export default defineConfig({
     alias: {
       '@guardrails/shared': pkg('shared'),
       '@guardrails/secret-detector': pkg('secret-detector'),
+      '@guardrails/redaction': pkg('redaction'),
     },
   },
   test: {

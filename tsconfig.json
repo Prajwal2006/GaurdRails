@@ -3,6 +3,7 @@
   "files": [],
   "references": [
     { "path": "./packages/shared/tsconfig.build.json" },
-    { "path": "./packages/secret-detector/tsconfig.build.json" }
+    { "path": "./packages/secret-detector/tsconfig.build.json" },
+    { "path": "./packages/redaction/tsconfig.build.json" }
   ]
 }

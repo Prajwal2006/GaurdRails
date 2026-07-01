@@ -41,12 +41,13 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 - ✅ De-dupe + overlap suppression + line/column + redacted preview
 - ✅ 100% line coverage on the engine; 113 detector tests (true/false positives)
 
-## Phase 3 — `@guardrails/redaction` ⬜
+## Phase 3 — `@guardrails/redaction` ✅
 
-- ⬜ Structure-preserving redaction (`KEY=<REDACTED>`)
-- ⬜ Partial reveal option (`sk-…last4`) — off by default
-- ⬜ Redaction of detector matches within arbitrary text
-- ⬜ Tests: never leaks the original value
+- ✅ Structure-preserving redaction (`KEY=<REDACTED>`) via detected spans
+- ✅ Overlap collapsing + input-order-independent sorting
+- ✅ Partial reveal option (`sk-********`) — off by default
+- ✅ Custom flat token and per-finding token overrides; `Redactor` class
+- ✅ Tests (13): never leaks the original value; ignores file-level findings
 
 ## Phase 4 — `@guardrails/policy-engine` ⬜
 
