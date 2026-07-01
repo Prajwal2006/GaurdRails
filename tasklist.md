@@ -61,12 +61,18 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
   allow code) + severity-based fail-safe fallback
 - ✅ `PolicyEngine.evaluate` / `evaluateFindings`; 44 tests, 100% line coverage
 
-## Phase 5 — `guardrails` CLI ⬜
+## Phase 5 — `@guardrails/core` + `guardrails` CLI ✅
 
-- ⬜ Commander scaffold + colored/iconed output helpers
-- ⬜ `scan`, `secrets`, `explain`, `doctor`, `status`, `report`, `config`, `init`
-- ⬜ `git install` / `git verify`
-- ⬜ Snapshot tests for command output
+- ✅ `@guardrails/core` facade composing detection + policy + redaction
+  (`Guardrails.inspect` / `.redact`, worst-outcome verdict)
+- ✅ Educational catalog for all 13 categories (beginner/intermediate/pro) +
+  alias resolution (`openai`, `aws`, `postgres`, …)
+- ✅ Filesystem scanner (walks dirs, skips ignores/binary/oversized files)
+- ✅ Commander CLI with colored/iconed output (no color dep; NO_COLOR aware)
+- ✅ Commands: `scan`/`secrets`, `explain`, `report`, `doctor`, `status`,
+  `init`, `policies`, `config`
+- ✅ Testable command layer (IO abstraction); 33 CLI/core tests; verified by
+  running the built binary end-to-end
 
 ## Phase 6 — Git protection ⬜
 

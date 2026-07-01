@@ -13,6 +13,7 @@ export default defineConfig({
       '@guardrails/secret-detector': pkg('secret-detector'),
       '@guardrails/redaction': pkg('redaction'),
       '@guardrails/policy-engine': pkg('policy-engine'),
+      '@guardrails/core': pkg('core'),
     },
   },
   test: {

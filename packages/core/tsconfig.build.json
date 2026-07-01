@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/*.test.ts"],
+  "references": [
+    { "path": "../shared/tsconfig.build.json" },
+    { "path": "../secret-detector/tsconfig.build.json" },
+    { "path": "../redaction/tsconfig.build.json" },
+    { "path": "../policy-engine/tsconfig.build.json" }
+  ]
+}

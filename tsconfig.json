@@ -5,6 +5,8 @@
     { "path": "./packages/shared/tsconfig.build.json" },
     { "path": "./packages/secret-detector/tsconfig.build.json" },
     { "path": "./packages/redaction/tsconfig.build.json" },
-    { "path": "./packages/policy-engine/tsconfig.build.json" }
+    { "path": "./packages/policy-engine/tsconfig.build.json" },
+    { "path": "./packages/core/tsconfig.build.json" },
+    { "path": "./apps/cli/tsconfig.build.json" }
   ]
 }

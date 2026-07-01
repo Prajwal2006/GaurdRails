@@ -1,0 +1,23 @@
+{
+  "name": "@guardrails/cli",
+  "version": "0.1.0",
+  "description": "The `guardrails` command-line tool.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "guardrails": "./dist/main.js"
+  },
+  "main": "./dist/main.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json",
+    "typecheck": "tsc -b tsconfig.build.json"
+  },
+  "dependencies": {
+    "@guardrails/core": "workspace:*",
+    "@guardrails/shared": "workspace:*",
+    "commander": "^12.1.0"
+  }
+}
