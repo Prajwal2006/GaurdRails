@@ -25,6 +25,7 @@
     "@guardrails/audit": "workspace:*",
     "@guardrails/core": "workspace:*",
     "@guardrails/policy-engine": "workspace:*",
+    "@guardrails/redaction": "workspace:*",
     "@guardrails/shared": "workspace:*"
   }
 }

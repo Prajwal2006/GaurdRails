@@ -4,7 +4,7 @@
  * records a value-free audit trail of every decision.
  */
 
-export { Mediator, type MediatorOptions } from './mediator.js';
+export { Mediator, type MediatorOptions, type DenyMode } from './mediator.js';
 export { diskFileSource, type FileSource } from './file-source.js';
 export { McpServer, PROTOCOL_VERSION, type McpServerOptions } from './server.js';
 export { serveStdio, type StdioOptions } from './stdio.js';

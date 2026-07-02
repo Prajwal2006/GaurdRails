@@ -21,6 +21,8 @@ import {
 import { runMcpInfo, runMcpServe } from './commands/mcp.js';
 import { runAdapters } from './commands/adapters.js';
 import { runAudit } from './commands/audit.js';
+import { runSetup } from './commands/setup.js';
+import { runConnect } from './commands/connect.js';
 
 function toLevel(value: string | undefined, fallback: ExperienceLevel): ExperienceLevel {
   return value !== undefined && (EXPERIENCE_LEVELS as readonly string[]).includes(value)
@@ -94,6 +96,21 @@ export async function run(argv: readonly string[], io: IO = consoleIO): Promise<
     .description('Create .guardrails config and a default policy')
     .action(async () => {
       exitCode = await runInit(io);
+    });
+
+  program
+    .command('setup')
+    .description('One-time project setup: config + git hooks, with next steps')
+    .action(async () => {
+      exitCode = await runSetup(io);
+    });
+
+  program
+    .command('connect [tool]')
+    .description('Show copy-paste config to connect an AI tool (Claude, Gemini, Codex, …)')
+    .option('-r, --root <dir>', 'project directory to protect (defaults to the current one)')
+    .action((tool: string | undefined, opts: { root?: string }) => {
+      exitCode = runConnect(tool, opts.root === undefined ? {} : { root: opts.root }, io);
     });
 
   program
@@ -179,10 +196,17 @@ export async function run(argv: readonly string[], io: IO = consoleIO): Promise<
     .option('--deny <globs...>', 'globs that are always denied')
     .option('--tool <id>', 'attribute requests to this tool id')
     .option('--no-audit', 'do not write an audit log')
+    .option('--withhold', 'strict mode: withhold sensitive files instead of redacting them')
     .action(
       async (
         root: string | undefined,
-        opts: { allow?: string[]; deny?: string[]; tool?: string; audit?: boolean },
+        opts: {
+          allow?: string[];
+          deny?: string[];
+          tool?: string;
+          audit?: boolean;
+          withhold?: boolean;
+        },
       ) => {
         exitCode = await runMcpServe(
           {
@@ -191,6 +215,7 @@ export async function run(argv: readonly string[], io: IO = consoleIO): Promise<
             ...(opts.deny !== undefined ? { deny: opts.deny } : {}),
             ...(opts.tool !== undefined ? { tool: opts.tool } : {}),
             ...(opts.audit === false ? { noAudit: true } : {}),
+            ...(opts.withhold === true ? { withhold: true } : {}),
           },
           io,
         );

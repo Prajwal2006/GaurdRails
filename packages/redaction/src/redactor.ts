@@ -87,6 +87,40 @@ function replacementFor(
   return token;
 }
 
+// Matches one `KEY=value` (or `export KEY=value` / `KEY: value`) line. Used by
+// `redactEnvContent` to mask every value in env-style content.
+const ENV_LINE = /^(\s*(?:export\s+)?[A-Za-z_][A-Za-z0-9_.-]*\s*[:=]\s*)(.*)$/;
+
+/**
+ * Mask **every** value in env-style content (`KEY=value` lines), regardless of
+ * whether a detector recognised it as a secret. Keys, comments, and blank lines
+ * are preserved so the reader still sees the file's structure - just none of
+ * its values. This is the belt-and-braces fallback for known-sensitive files
+ * (.env and friends), where a value the detectors don't recognise must still
+ * never be exposed.
+ */
+export function redactEnvContent(content: string, options: RedactionOptions = {}): RedactionResult {
+  const token = options.token ?? REDACTED;
+  let redactions = 0;
+
+  const lines = content.split('\n').map((rawLine) => {
+    const line = rawLine.endsWith('\r') ? rawLine.slice(0, -1) : rawLine;
+    const eol = rawLine.endsWith('\r') ? '\r' : '';
+    const trimmed = line.trim();
+    if (trimmed.length === 0 || trimmed.startsWith('#')) return rawLine;
+
+    const match = ENV_LINE.exec(line);
+    if (match === null) return rawLine;
+    const value = (match[2] ?? '').trim();
+    if (value.length === 0) return rawLine;
+
+    redactions += 1;
+    return `${match[1]}${token}${eol}`;
+  });
+
+  return { content: lines.join('\n'), redactions };
+}
+
 /** Fully mask a standalone value. Convenience wrapper over the shared primitive. */
 export function redactValue(
   value: string,

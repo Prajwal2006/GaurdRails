@@ -77,7 +77,7 @@ Tests run directly against **TypeScript source** (via Vitest aliases), so you do
 
 ### Expected results
 
-- **358+ tests pass**, 41 test files.
+- **368+ tests pass**, 41 test files.
 - Coverage for the new packages is ~99% lines (thresholds: 85% lines/functions/
   statements, 80% branches).
 
@@ -202,13 +202,15 @@ pnpm vitest run apps/cli/src/extra-cli.test.ts
 
 Highlights:
 
-- **`mediator.test.ts`** - a high-severity secret is **denied** (content
-  withheld, audit records `deny`); deny/allow lists are honored; medium secrets
-  are **redacted**; clean content passes through untouched; works with **no
-  audit sink**.
+- **`mediator.test.ts`** - a denied sensitive file is served as a **fully
+  redacted copy** by default (every `KEY=value` masked, audit records
+  `redact`); `denyMode: 'withhold'` returns nothing instead (audit records
+  `deny`); deny/allow lists are honored; medium secrets are **redacted**; clean
+  content passes through untouched; works with **no audit sink**.
 - **`server.test.ts`** - full protocol: `initialize`, `tools/list`,
   `tools/call` for `read_file` and `list_files`; a file with a secret is
-  withheld and **never leaked**; `list_files` omits denied files.
+  redacted (or withheld in strict mode) and the raw value is **never leaked**;
+  `list_files` marks redacted files.
 - **`file-source.test.ts`** - path-traversal is refused (`../../etc/passwd`
   → undefined), ignored dirs skipped.
 - **`stdio.test.ts`** - newline-delimited JSON-RPC over a stream, parse errors
@@ -232,14 +234,15 @@ printf '%s\n' \
 You should get two JSON-RPC responses: server info (protocol `2024-11-05`) and
 the two tools (`read_file`, `list_files`).
 
-Try a mediated read of a secret file (it should be withheld):
+Try a mediated read of a secret file (it is served as a redacted copy):
 
 ```bash
 echo "OPENAI_API_KEY=sk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" > secret.env
 printf '%s\n' \
   '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"read_file","arguments":{"path":"secret.env"}}}' \
   | node apps/cli/dist/main.js mcp serve --no-audit
-# → result.isError === true, and the response contains NO raw key
+# → content is "OPENAI_API_KEY=<REDACTED>" + a plain-English note.
+#   The response contains NO raw key. Add --withhold for a hard block instead.
 ```
 
 **Serve options**
@@ -247,8 +250,10 @@ printf '%s\n' \
 ```
 guardrails mcp serve [root]
   --allow <globs...>   always allow (e.g. --allow "src/**")
-  --deny  <globs...>   always deny  (e.g. --deny "**/*.pem" "**/.env")
+  --deny  <globs...>   always deny outright (e.g. --deny "**/*.pem")
   --tool  <id>         attribute requests to a tool id (default claude-code)
+  --withhold           strict mode: return nothing for denied files
+                       (default: return a fully redacted copy)
   --no-audit           do not write an audit log
 ```
 
@@ -266,8 +271,13 @@ guardrails audit --file .guardrails/audit.jsonl
 
 ### 5.4 Wiring the server into an AI client (example: Claude Desktop)
 
-MCP clients launch the server as a subprocess and talk over stdio. Add an entry
-to your client’s MCP config pointing at the built binary:
+The easy way: run `guardrails connect <tool>` inside the project - it prints
+this config with your machine's absolute paths already filled in, for Claude
+Code, Claude Desktop, Cursor, Windsurf, Antigravity, Gemini CLI, Codex, and
+GitHub Copilot.
+
+Manually: MCP clients launch the server as a subprocess and talk over stdio.
+Add an entry to your client’s MCP config pointing at the built binary:
 
 ```json
 {
@@ -299,7 +309,9 @@ AI tool ──▶ adapter.normalizeRequest ──▶ FileReadRequest
                                              │ no
                                              ▼
                                     Guardrails.inspect (detect + policy)
-                     deny ─▶ withhold (audit)      redact ─▶ mask (audit)
+                     deny ─▶ fully redacted copy (audit: redact)
+                             (or withhold, with denyMode: 'withhold')
+                     redact ─▶ mask (audit)
                      audit-only ─▶ expose (audit)  clean ─▶ expose
                                              │
                                              ▼

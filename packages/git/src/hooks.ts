@@ -43,6 +43,8 @@ export function renderHookBlock(hook: GitHook): string {
   return [
     BEGIN,
     '# Managed by Guardrails. Remove with `guardrails git uninstall`.',
+    '# Attach the terminal (when there is one) so Guardrails can ask before blocking.',
+    "if sh -c ': < /dev/tty' 2>/dev/null; then exec < /dev/tty; fi",
     'if command -v guardrails >/dev/null 2>&1; then',
     `  guardrails git ${hook} || exit $?`,
     'else',

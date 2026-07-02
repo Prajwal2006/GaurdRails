@@ -9,7 +9,8 @@
       "@guardrails/core": ["../core/src/index.ts"],
       "@guardrails/policy-engine": ["../policy-engine/src/index.ts"],
       "@guardrails/adapters": ["../adapters/src/index.ts"],
-      "@guardrails/audit": ["../audit/src/index.ts"]
+      "@guardrails/audit": ["../audit/src/index.ts"],
+      "@guardrails/redaction": ["../redaction/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"]

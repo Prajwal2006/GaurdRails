@@ -21,12 +21,17 @@ export function formatBlockMessage(result: GitScanResult, hook: GitHook): string
   const count = result.findings.length;
 
   lines.push('');
-  lines.push('🛡️  Guardrails blocked this ' + action + '.');
+  lines.push(`🛡️  Guardrails stopped this ${action} - it would publish your secrets.`);
+  lines.push('');
+  lines.push('In plain words: you are about to ' + action + ' files that hold passwords or');
+  lines.push('API keys (a .env file, for example). Once they reach GitHub or any git server,');
+  lines.push('every person, bot, and AI tool that can see the repository can read them and');
+  lines.push('use your accounts. Nothing has been shared yet - Guardrails caught it in time.');
   lines.push('');
   lines.push(
     `Found ${count} potential secret${count === 1 ? '' : 's'} in ${result.files.length} file${
       result.files.length === 1 ? '' : 's'
-    }. Committing secrets can expose them to anyone with repo access - and to AI tools that read your code.`,
+    }:`,
   );
   lines.push('');
 
@@ -59,7 +64,7 @@ export function formatBlockMessage(result: GitScanResult, hook: GitHook): string
     lines.push('');
   }
 
-  lines.push('Once resolved, retry your ' + action + '.');
+  lines.push(`Once resolved, simply retry your ${action}.`);
   lines.push(`To ${action} anyway (not recommended), pass --no-verify.`);
   lines.push('');
 

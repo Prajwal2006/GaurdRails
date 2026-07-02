@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Finding } from '@guardrails/shared';
-import { Redactor, redactContent, redactValue } from './redactor.js';
+import { Redactor, redactContent, redactEnvContent, redactValue } from './redactor.js';
 
 function findingFor(content: string, needle: string): Finding {
   const index = content.indexOf(needle);
@@ -123,5 +123,45 @@ describe('Redactor', () => {
     const content = `KEY=${secret}`;
     const redactor = new Redactor({ token: '<HIDDEN>' });
     expect(redactor.redact(content, [findingFor(content, secret)]).content).toBe('KEY=<HIDDEN>');
+  });
+});
+
+describe('redactEnvContent', () => {
+  it('masks every value while keeping keys, comments, and blank lines', () => {
+    const content = [
+      '# app settings',
+      'APP_NAME=my-app',
+      'export DB_PASSWORD=hunter2',
+      '',
+      'PORT=3000',
+    ].join('\n');
+    const result = redactEnvContent(content);
+    expect(result.content).toBe(
+      [
+        '# app settings',
+        'APP_NAME=<REDACTED>',
+        'export DB_PASSWORD=<REDACTED>',
+        '',
+        'PORT=<REDACTED>',
+      ].join('\n'),
+    );
+    expect(result.redactions).toBe(3);
+    expect(result.content).not.toContain('hunter2');
+  });
+
+  it('handles CRLF line endings and yaml-style colons', () => {
+    const result = redactEnvContent('token: abc123\r\nname: demo\r\n');
+    expect(result.content).toBe('token: <REDACTED>\r\nname: <REDACTED>\r\n');
+  });
+
+  it('leaves keys with empty values and non-assignment lines alone', () => {
+    const content = 'EMPTY=\nsome random prose line\nKEY=value';
+    const result = redactEnvContent(content);
+    expect(result.content).toBe('EMPTY=\nsome random prose line\nKEY=<REDACTED>');
+    expect(result.redactions).toBe(1);
+  });
+
+  it('honours a custom token', () => {
+    expect(redactEnvContent('A=b12345', { token: '***' }).content).toBe('A=***');
   });
 });

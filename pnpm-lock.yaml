@@ -123,6 +123,9 @@ importers:
       '@guardrails/policy-engine':
         specifier: workspace:*
         version: link:../policy-engine
+      '@guardrails/redaction':
+        specifier: workspace:*
+        version: link:../redaction
       '@guardrails/shared':
         specifier: workspace:*
         version: link:../shared

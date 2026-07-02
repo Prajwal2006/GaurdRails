@@ -12,6 +12,7 @@
     { "path": "../core/tsconfig.build.json" },
     { "path": "../policy-engine/tsconfig.build.json" },
     { "path": "../adapters/tsconfig.build.json" },
-    { "path": "../audit/tsconfig.build.json" }
+    { "path": "../audit/tsconfig.build.json" },
+    { "path": "../redaction/tsconfig.build.json" }
   ]
 }

@@ -30,6 +30,44 @@ describe('adapters', () => {
   });
 });
 
+describe('setup', () => {
+  it('creates config and reports next steps outside a git repo', async () => {
+    const io = createBufferIO();
+    expect(await run(['setup'], io)).toBe(0);
+    const text = io.stdout.join('\n');
+    expect(text).toContain('Config created');
+    expect(text).toContain('guardrails connect');
+  });
+});
+
+describe('connect', () => {
+  it('lists connectable tools when no tool is given', async () => {
+    const io = createBufferIO();
+    expect(await run(['connect'], io)).toBe(0);
+    const text = io.stdout.join('\n');
+    expect(text).toContain('claude-code');
+    expect(text).toContain('gemini-cli');
+    expect(text).toContain('copilot');
+  });
+
+  it('prints a claude-desktop JSON snippet with paths filled in', async () => {
+    const io = createBufferIO();
+    expect(await run(['connect', 'claude-desktop'], io)).toBe(0);
+    const text = io.stdout.join('\n');
+    expect(text).toContain('"mcpServers"');
+    expect(text).toContain('"guardrails"');
+    expect(text).toContain('mcp');
+    expect(text).toContain('serve');
+    expect(text).toContain('claude_desktop_config.json');
+  });
+
+  it('rejects an unknown tool with a helpful error', async () => {
+    const io = createBufferIO();
+    expect(await run(['connect', 'notepad'], io)).toBe(2);
+    expect(io.stderr.join('\n')).toContain('Unknown tool');
+  });
+});
+
 describe('mcp info', () => {
   it('describes the server without starting it', async () => {
     const io = createBufferIO();

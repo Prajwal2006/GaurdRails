@@ -15,6 +15,8 @@
   ],
   "scripts": {
     "build": "tsc -b",
+    "install-cli": "pnpm run build && node scripts/install-global.mjs",
+    "uninstall-cli": "node scripts/install-global.mjs --remove",
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",

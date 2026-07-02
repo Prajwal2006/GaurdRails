@@ -80,7 +80,8 @@ describe('git pre-commit hook', () => {
     const code = await run(['git', 'pre-commit'], io);
     expect(code).toBe(1);
     const err = io.stderr.join('\n');
-    expect(err).toContain('Guardrails blocked this commit');
+    expect(err).toContain('Guardrails stopped this commit');
+    expect(err).toContain('Stopped safely');
     expect(err).not.toContain(OPENAI);
   });
 });

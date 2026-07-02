@@ -12,9 +12,28 @@ function guardrailsWithDefault(action: Policy['defaultAction']): Guardrails {
 }
 
 describe('Mediator', () => {
-  it('denies content containing a high-severity secret and audits it', async () => {
+  it('serves a denied .env as a fully redacted copy by default', async () => {
     const audit = new MemoryAuditSink();
     const mediator = new Mediator({ audit });
+    const response = await mediator.mediate({
+      tool: 'claude-code',
+      path: '.env',
+      content: `OPENAI_API_KEY=${OPENAI}\nHARMLESS_LOOKING=actually-a-secret-value\n`,
+    });
+    expect(response.allowed).toBe(true);
+    // Every value is masked - even the one no detector recognised.
+    expect(response.content).not.toContain(OPENAI);
+    expect(response.content).not.toContain('actually-a-secret-value');
+    expect(response.content).toContain('OPENAI_API_KEY=<REDACTED>');
+    expect(response.content).toContain('HARMLESS_LOOKING=<REDACTED>');
+    expect(response.message).toContain('never left your computer');
+    expect(response.message).not.toContain(OPENAI);
+    expect(audit.list()[0]?.action).toBe('redact');
+  });
+
+  it('withholds denied content entirely in withhold mode', async () => {
+    const audit = new MemoryAuditSink();
+    const mediator = new Mediator({ audit, denyMode: 'withhold' });
     const response = await mediator.mediate({
       tool: 'claude-code',
       path: '.env',
@@ -83,7 +102,8 @@ describe('Mediator', () => {
       path: '.env',
       content: `OPENAI_API_KEY=${OPENAI}\n`,
     });
-    expect(response.allowed).toBe(false);
+    expect(response.allowed).toBe(true);
+    expect(response.content).not.toContain(OPENAI);
   });
 
   it('redacts when the policy default is redact', async () => {
@@ -96,7 +116,7 @@ describe('Mediator', () => {
     });
     expect(response.allowed).toBe(true);
     expect(response.content).not.toContain(OPENAI);
-    expect(response.message).toContain('redacted');
+    expect(response.message).toContain('hid 1 secret value');
     expect(audit.list()[0]?.action).toBe('redact');
   });
 

@@ -4,5 +4,5 @@
  * contains the original value of any redacted span.
  */
 
-export { redactContent, redactValue, Redactor } from './redactor.js';
+export { redactContent, redactEnvContent, redactValue, Redactor } from './redactor.js';
 export type { RedactionOptions, RedactionResult } from './redactor.js';

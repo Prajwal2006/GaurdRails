@@ -1,4 +1,4 @@
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { Guardrails } from '@guardrails/core';
 import { JsonlAuditSink } from '@guardrails/audit';
 import {
@@ -20,6 +20,8 @@ export interface McpServeOptions {
   readonly deny?: readonly string[];
   readonly tool?: string;
   readonly noAudit?: boolean;
+  /** Strict mode: withhold denied files entirely instead of serving a redacted copy. */
+  readonly withhold?: boolean;
 }
 
 /**
@@ -27,14 +29,17 @@ export interface McpServeOptions {
  * JSON-RPC channel, so all human-facing output goes to stderr.
  */
 export async function runMcpServe(options: McpServeOptions, io: IO): Promise<number> {
-  const root = options.root ?? process.cwd();
-  const auditPath = join(process.cwd(), CONFIG_DIR, AUDIT_FILE);
+  // AI clients (Claude Desktop, Cursor, …) launch this process with an
+  // arbitrary cwd, so resolve the root and keep the audit log inside it.
+  const root = resolve(options.root ?? process.cwd());
+  const auditPath = join(root, CONFIG_DIR, AUDIT_FILE);
 
   const mediator = new Mediator({
     guardrails: new Guardrails(),
     ...(options.noAudit === true ? {} : { audit: new JsonlAuditSink(auditPath) }),
     ...(options.allow !== undefined ? { allow: [...options.allow] } : {}),
     ...(options.deny !== undefined ? { deny: [...options.deny] } : {}),
+    ...(options.withhold === true ? { denyMode: 'withhold' as const } : {}),
   });
 
   const server = new McpServer({
@@ -45,7 +50,11 @@ export async function runMcpServe(options: McpServeOptions, io: IO): Promise<num
 
   io.err(`${icon.shield} Guardrails MCP server on stdio - serving ${root}`);
   io.err(
-    c.dim(`Protocol ${PROTOCOL_VERSION}. Audit: ${options.noAudit === true ? 'off' : auditPath}`),
+    c.dim(
+      `Protocol ${PROTOCOL_VERSION}. Sensitive files are served as redacted copies${
+        options.withhold === true ? ' (strict: withheld entirely)' : ''
+      }. Audit: ${options.noAudit === true ? 'off' : auditPath}`,
+    ),
   );
   await serveStdio(server);
   return 0;
@@ -59,7 +68,7 @@ export function runMcpInfo(io: IO): number {
   io.out(`  ${icon.bullet} Transport:        ${c.cyan('stdio (newline-delimited JSON-RPC)')}`);
   io.out(`  ${icon.bullet} Tools exposed:    ${c.cyan('read_file, list_files')}`);
   io.out('');
-  io.out(c.dim('Every file is mediated by Guardrails; denied files are never returned.'));
-  io.out(c.dim('Start it with `guardrails mcp serve` and point your AI client at it.'));
+  io.out(c.dim('Every file is mediated by Guardrails: secrets are replaced with <REDACTED>'));
+  io.out(c.dim('before an AI sees them. Run `guardrails connect` to hook up your AI tool.'));
   return 0;
 }

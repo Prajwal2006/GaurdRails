@@ -7,7 +7,17 @@ import {
 } from '@guardrails/shared';
 import { Guardrails } from '@guardrails/core';
 import { matchGlob } from '@guardrails/policy-engine';
+import { redactContent, redactEnvContent } from '@guardrails/redaction';
 import { createAuditEvent } from '@guardrails/audit';
+
+/**
+ * What to do when policy says "deny":
+ * - `redact` (default): the AI receives a copy with every secret value replaced
+ *   by `<REDACTED>` - it can still see the file's structure and help, but no
+ *   real value ever leaves the machine.
+ * - `withhold`: the AI receives nothing but an explanation.
+ */
+export type DenyMode = 'redact' | 'withhold';
 
 export interface MediatorOptions {
   /** The engine that detects + decides. Defaults to a fresh `Guardrails`. */
@@ -18,6 +28,8 @@ export interface MediatorOptions {
   readonly allow?: readonly string[];
   /** Globs that are always denied outright (e.g. `**\/.env`, `**\/*.pem`). */
   readonly deny?: readonly string[];
+  /** How to answer when policy denies a file. Default `redact`. */
+  readonly denyMode?: DenyMode;
   /** Fetch content for a path when the request omits it (e.g. read from disk). */
   readonly readContent?: (path: string) => Promise<string | undefined>;
 }
@@ -27,16 +39,40 @@ function anyMatch(globs: readonly string[], path: string): boolean {
 }
 
 /**
- * The heart of Phase 7: decides what an AI tool may see for a given file. It
- * consults deny/allow lists first, then runs the Guardrails engine, and records
- * a value-free audit event for every non-trivial decision. It never returns a
- * raw secret - denied content is withheld and redactable content is masked.
+ * The plain-language note an AI tool (and the person driving it) sees when a
+ * sensitive file is served as a redacted copy. Written for beginners: what
+ * happened, why it matters, and that nothing secret left the machine.
+ */
+function redactedCopyMessage(path: string, tool: string): string {
+  return (
+    `🛡️ Guardrails protected "${path}". This file holds secrets - things like passwords and API keys. ` +
+    `Anything an AI reads is sent to ${tool}'s servers, so Guardrails sent a safe copy instead: ` +
+    `every secret value is replaced with <REDACTED>. Your real values never left your computer. ` +
+    `(AI: do not try to read the original values; work with the placeholders.)`
+  );
+}
+
+function withheldMessage(path: string, tool: string): string {
+  return (
+    `🛡️ Guardrails blocked "${path}". This file holds secrets - things like passwords and API keys. ` +
+    `If ${tool} read it, those secrets would be sent to its servers. ` +
+    `Nothing was shared. Keep secrets in this file and give the AI a safe example file instead (e.g. ".env.example").`
+  );
+}
+
+/**
+ * Decides what an AI tool may see for a given file. It consults deny/allow
+ * globs first, then runs the Guardrails engine, and records a value-free audit
+ * event for every non-trivial decision. It never returns a raw secret:
+ * denied content is either withheld or served as a fully redacted copy
+ * (per `denyMode`), and redactable content is masked.
  */
 export class Mediator {
   private readonly guardrails: Guardrails;
   private readonly audit: AuditSink | undefined;
   private readonly allow: readonly string[];
   private readonly deny: readonly string[];
+  private readonly denyMode: DenyMode;
   private readonly readContent: ((path: string) => Promise<string | undefined>) | undefined;
 
   constructor(options: MediatorOptions = {}) {
@@ -44,6 +80,7 @@ export class Mediator {
     this.audit = options.audit;
     this.allow = options.allow ?? [];
     this.deny = options.deny ?? [];
+    this.denyMode = options.denyMode ?? 'redact';
     this.readContent = options.readContent;
   }
 
@@ -68,12 +105,10 @@ export class Mediator {
   async mediate(request: FileReadRequest): Promise<MediatedResponse> {
     const { path } = request;
 
+    // An explicit deny glob is a hard "no" from the user - always withhold.
     if (this.deny.length > 0 && anyMatch(this.deny, path)) {
       this.record(request, 'deny', 'Path is on the deny list');
-      return {
-        allowed: false,
-        message: `Guardrails: "${path}" is on the deny list and cannot be shared with ${request.tool}.`,
-      };
+      return { allowed: false, message: withheldMessage(path, request.tool) };
     }
 
     if (this.allow.length > 0 && anyMatch(this.allow, path)) {
@@ -92,10 +127,22 @@ export class Mediator {
 
     switch (result.outcome) {
       case 'deny': {
-        this.record(request, 'deny', 'Sensitive content withheld', summaries);
+        if (this.denyMode === 'withhold') {
+          this.record(request, 'deny', 'Sensitive content withheld', summaries);
+          return { allowed: false, message: withheldMessage(path, request.tool) };
+        }
+        // Default: serve a fully redacted copy so the AI can still help,
+        // while every secret value stays on this machine.
+        this.record(
+          request,
+          'redact',
+          'Denied by policy - served a fully redacted copy instead',
+          summaries,
+        );
         return {
-          allowed: false,
-          message: `Guardrails blocked "${path}": it contains ${result.findings.length} secret(s). Access denied to ${request.tool}.`,
+          allowed: true,
+          content: this.fullyRedact(path, content, result),
+          message: redactedCopyMessage(path, request.tool),
         };
       }
       case 'redact': {
@@ -108,7 +155,7 @@ export class Mediator {
         return {
           allowed: true,
           content: redacted,
-          message: `Guardrails redacted ${redactions} secret(s) from "${path}".`,
+          message: `🛡️ Guardrails hid ${redactions} secret value(s) in "${path}" before sharing it. The AI sees <REDACTED> placeholders, not your real values.`,
         };
       }
       case 'audit': {
@@ -118,6 +165,28 @@ export class Mediator {
       case 'clean':
         return { allowed: true, content };
     }
+  }
+
+  /**
+   * Produce the redacted copy for a denied file. Every detected secret span is
+   * masked. When the file was flagged as sensitive by its name (e.g. `.env`),
+   * every `KEY=value` value is masked first - belt and braces, so values the
+   * detectors did not recognise still never leave the machine - and the masked
+   * copy is re-scanned to catch anything span-based (e.g. an inline PEM block).
+   */
+  private fullyRedact(
+    path: string,
+    content: string,
+    result: ReturnType<Guardrails['inspect']>,
+  ): string {
+    const flaggedByName = result.findings.some((f) => f.index === undefined);
+    if (!flaggedByName) {
+      // Mask every finding, not just the blocking ones - the file is denied.
+      return redactContent(content, result.findings).content;
+    }
+    const envMasked = redactEnvContent(content).content;
+    const rescan = this.guardrails.inspect({ path, content: envMasked });
+    return redactContent(envMasked, rescan.findings).content;
   }
 
   private async resolveContent(request: FileReadRequest): Promise<string | undefined> {

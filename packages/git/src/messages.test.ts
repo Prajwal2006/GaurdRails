@@ -24,7 +24,8 @@ describe('formatBlockMessage', () => {
     const result = await scanStaged(repo, new Guardrails());
     const text = formatBlockMessage(result, 'pre-commit').join('\n');
 
-    expect(text).toContain('Guardrails blocked this commit');
+    expect(text).toContain('Guardrails stopped this commit');
+    expect(text).toContain('In plain words');
     expect(text).toContain('.env');
     expect(text).toContain('How to fix it');
     expect(text).toContain('--no-verify');
@@ -35,6 +36,6 @@ describe('formatBlockMessage', () => {
     const repo = repoFor({ '.env': `OPENAI_API_KEY=${OPENAI}\n` });
     const result = await scanStaged(repo, new Guardrails());
     const text = formatBlockMessage(result, 'pre-push').join('\n');
-    expect(text).toContain('Guardrails blocked this push');
+    expect(text).toContain('Guardrails stopped this push');
   });
 });

@@ -45,7 +45,7 @@ exhaustively testable.
 
 - **Pure domain core.** No filesystem or network access inside `secret-detector`
   - callers pass content in, findings come out. This makes the engine trivial to
-  fuzz and unit-test, and safe to run anywhere.
+    fuzz and unit-test, and safe to run anywhere.
 - **Everything behind interfaces.** Detectors, adapters, policies, reporters, and
   notifiers are all pluggable. Third parties extend Guardrails without forking it.
 - **Fail safe by default.** The default policy denies known-sensitive files and

@@ -1,3 +1,4 @@
+import { createInterface } from 'node:readline';
 import { Guardrails } from '@guardrails/core';
 import {
   applyFixes,
@@ -167,8 +168,31 @@ export async function runGitFix(io: IO): Promise<number> {
 }
 
 /**
+ * Ask the user - on their terminal - whether to proceed despite the findings.
+ * Fail safe: when there is no interactive terminal (CI, GUI git clients), the
+ * answer is always "no". Pressing Enter also means "no".
+ */
+async function confirmProceed(action: string, io: IO): Promise<boolean> {
+  if (process.env.CI !== undefined) return false;
+  if (process.env.GUARDRAILS_NO_PROMPT !== undefined) return false;
+  if (process.stdin.isTTY !== true || process.stderr.isTTY !== true) return false;
+
+  io.err(c.bold(`${icon.warn}  These secrets are about to leave your computer.`));
+  const rl = createInterface({ input: process.stdin, output: process.stderr });
+  try {
+    const answer = await new Promise<string>((resolve) => {
+      rl.question(`Do you still want to ${action}? Type y to continue, Enter to stop: `, resolve);
+    });
+    return /^y(?:es)?$/i.test(answer.trim());
+  } finally {
+    rl.close();
+  }
+}
+
+/**
  * `guardrails git pre-commit` / `pre-push` - the hook entry points. Returns a
- * non-zero code to abort the git operation when secrets are found.
+ * non-zero code to abort the git operation when secrets are found. When run on
+ * an interactive terminal the user is asked first; everywhere else it blocks.
  */
 export async function runGitHook(hook: GitHook, io: IO): Promise<number> {
   const repo = await openRepo(io);
@@ -183,5 +207,15 @@ export async function runGitHook(hook: GitHook, io: IO): Promise<number> {
   if (!shouldBlock) return 0;
 
   for (const line of formatBlockMessage(result, hook)) io.err(line);
+
+  const action = hook === 'pre-commit' ? 'commit' : 'push';
+  if (await confirmProceed(action, io)) {
+    io.err('');
+    io.err(c.yellow(`${icon.warn} Proceeding at your request. These secrets are now in git -`));
+    io.err(c.yellow('  treat them as exposed and rotate them if this repository is shared.'));
+    return 0;
+  }
+  io.err(c.green(`${icon.check} Stopped safely - nothing was shared.`));
+  io.err(c.dim('  Tip: run `guardrails git fix` to move secrets out of git the safe way.'));
   return 1;
 }
