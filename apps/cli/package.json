@@ -16,8 +16,10 @@
     "typecheck": "tsc -b tsconfig.build.json"
   },
   "dependencies": {
+    "@guardrails/agent-adapters": "workspace:*",
     "@guardrails/core": "workspace:*",
     "@guardrails/git": "workspace:*",
+    "@guardrails/mcp": "workspace:*",
     "@guardrails/shared": "workspace:*",
     "commander": "^12.1.0"
   }

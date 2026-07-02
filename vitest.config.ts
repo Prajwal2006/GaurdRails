@@ -15,6 +15,8 @@ export default defineConfig({
       '@guardrails/policy-engine': pkg('policy-engine'),
       '@guardrails/core': pkg('core'),
       '@guardrails/git': pkg('git'),
+      '@guardrails/agent-adapters': pkg('agent-adapters'),
+      '@guardrails/mcp': pkg('mcp'),
     },
   },
   test: {

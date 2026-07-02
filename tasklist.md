@@ -84,11 +84,17 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 - ✅ 6 tests over a real temp git repo; verified end-to-end (hook blocks a
   staged `.env` with a live-looking key)
 
-## Phase 7 — MCP server & agent adapters ⬜
+## Phase 7 — MCP server & agent adapters ✅
 
-- ⬜ `AgentAdapter` implementations (Claude Code, Codex, Cursor, Copilot, Gemini)
-- ⬜ MCP server exposing only approved files
-- ⬜ Allow/deny lists + audit logging
+- ✅ `@guardrails/agent-adapters`: factory-driven adapters for Claude Code,
+  Codex, Copilot, Gemini CLI, Cursor, Windsurf (new tool = one line)
+- ✅ `@guardrails/mcp`: `GuardedFileServer` serving only approved files —
+  redacts secrets, denies sensitive files with a clear message, blocks
+  path traversal, honours allow/deny globs, audits without storing values
+- ✅ Dependency-free MCP JSON-RPC layer + stdio transport
+- ✅ `guardrails mcp serve` and `guardrails agents` CLI commands
+- ✅ 24 tests; verified end-to-end over real stdio (clean code served, `.env`
+  denied)
 
 ## Later phases ⬜
 

@@ -26,5 +26,7 @@ export {
   createDefaultPolicy,
   parsePolicy,
   parsePolicyJson,
+  matchGlob,
+  hasExtension,
 } from '@guardrails/policy-engine';
 export { redactContent, redactValue } from '@guardrails/redaction';

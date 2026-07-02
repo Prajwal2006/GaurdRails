@@ -10,6 +10,7 @@ import { runInit } from './commands/init.js';
 import { runReport, type ReportFormat } from './commands/report.js';
 import { runConfig, runPolicies } from './commands/policies.js';
 import { runGitInstall, runGitUninstall, runGitVerify } from './commands/git.js';
+import { runAgents, runMcpServe } from './commands/mcp.js';
 
 function toLevel(value: string | undefined, fallback: ExperienceLevel): ExperienceLevel {
   return value !== undefined && (EXPERIENCE_LEVELS as readonly string[]).includes(value)
@@ -120,6 +121,28 @@ export async function run(argv: readonly string[], io: IO = consoleIO): Promise<
     .option('--fix', 'add flagged sensitive files to .gitignore')
     .action(async (opts: { staged?: boolean; fix?: boolean }) => {
       exitCode = await runGitVerify(io, { staged: opts.staged === true, fix: opts.fix === true });
+    });
+
+  program
+    .command('agents')
+    .description('List the AI tools Guardrails can mediate')
+    .action(() => {
+      exitCode = runAgents(io);
+    });
+
+  const mcp = program.command('mcp').description('Model Context Protocol server');
+  mcp
+    .command('serve')
+    .description('Run the guarded MCP file server on stdio')
+    .option('--root <dir>', 'directory to serve (default: current directory)')
+    .option('--allow <glob...>', 'only allow files matching these globs')
+    .option('--deny <glob...>', 'always deny files matching these globs')
+    .action(async (opts: { root?: string; allow?: string[]; deny?: string[] }) => {
+      exitCode = await runMcpServe(io, {
+        ...(opts.root !== undefined ? { root: opts.root } : {}),
+        ...(opts.allow !== undefined ? { allow: opts.allow } : {}),
+        ...(opts.deny !== undefined ? { deny: opts.deny } : {}),
+      });
     });
 
   program.exitOverride();

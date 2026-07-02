@@ -114,6 +114,14 @@ describe('other commands', () => {
     expect(await run(['policies'], io)).toBe(0);
     expect(io.stdout.join('\n')).toContain('deny-high-severity');
   });
+
+  it('agents lists supported AI tools', async () => {
+    const io = createBufferIO();
+    expect(await run(['agents'], io)).toBe(0);
+    const text = io.stdout.join('\n');
+    expect(text).toContain('Claude Code');
+    expect(text).toContain('Cursor');
+  });
 });
 
 describe('report', () => {

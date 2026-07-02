@@ -10,6 +10,8 @@
   "references": [
     { "path": "../../packages/shared/tsconfig.build.json" },
     { "path": "../../packages/core/tsconfig.build.json" },
-    { "path": "../../packages/git/tsconfig.build.json" }
+    { "path": "../../packages/git/tsconfig.build.json" },
+    { "path": "../../packages/agent-adapters/tsconfig.build.json" },
+    { "path": "../../packages/mcp/tsconfig.build.json" }
   ]
 }
