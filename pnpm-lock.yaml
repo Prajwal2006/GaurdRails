@@ -69,6 +69,9 @@ importers:
       '@guardrails/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@guardrails/shield':
+        specifier: workspace:*
+        version: link:../../packages/shield
       commander:
         specifier: ^12.1.0
         version: 12.1.0
@@ -149,6 +152,12 @@ importers:
         version: link:../shared
 
   packages/shared: {}
+
+  packages/shield:
+    dependencies:
+      '@guardrails/shared':
+        specifier: workspace:*
+        version: link:../shared
 
 packages:
 

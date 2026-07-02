@@ -13,6 +13,7 @@
     { "path": "../../packages/adapters/tsconfig.build.json" },
     { "path": "../../packages/audit/tsconfig.build.json" },
     { "path": "../../packages/git/tsconfig.build.json" },
-    { "path": "../../packages/mcp-server/tsconfig.build.json" }
+    { "path": "../../packages/mcp-server/tsconfig.build.json" },
+    { "path": "../../packages/shield/tsconfig.build.json" }
   ]
 }

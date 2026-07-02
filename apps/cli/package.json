@@ -22,6 +22,7 @@
     "@guardrails/git": "workspace:*",
     "@guardrails/mcp-server": "workspace:*",
     "@guardrails/shared": "workspace:*",
+    "@guardrails/shield": "workspace:*",
     "commander": "^12.1.0"
   }
 }

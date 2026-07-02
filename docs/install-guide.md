@@ -5,13 +5,17 @@ No security knowledge needed. Total time: about 5 minutes.
 
 **What Guardrails does for you:**
 
-1. **When an AI assistant tries to read your `.env`** (the file with your
+1. **One command shields every AI tool on your computer.** `guardrails setup`
+   finds Claude Code, Cursor, Windsurf, Gemini, Codex, Copilot, and friends, and
+   writes each one's secret-protection *for you* - no config files to edit. Many
+   of them get their file reader **blocked** from your `.env` and keys outright.
+2. **When an AI assistant tries to read your `.env`** (the file with your
    passwords and API keys), Guardrails steps in. The AI gets a safe copy where
-   every value says `<REDACTED>`, plus a note explaining why. Your real secrets
-   never leave your computer.
-2. **When you accidentally `git commit` or `git push` a `.env`**, Guardrails
+   every value says `<REDACTED>`, plus a note explaining why - or is blocked
+   entirely. Your real secrets never leave your computer.
+3. **When you accidentally `git commit` or `git push` a `.env`**, Guardrails
    stops it, explains the risk in plain words, and asks you what to do.
-3. **Everything runs 100% on your machine.** No account, no cloud, no telemetry.
+4. **Everything runs 100% on your machine.** No account, no cloud, no telemetry.
 
 > **Why this matters, in one sentence:** anything an AI assistant reads is sent
 > to that AI company's servers - so a `.env` it reads means your passwords just
@@ -89,70 +93,83 @@ guardrails setup
   ✓ Git pre-commit hook created
   ✓ Git pre-push hook created
 
-You are protected on the git side. Two optional next steps:
+Found 3 AI tools on this computer. Shielding:
 
-  1. See what is risky right now:   guardrails scan
-  2. Shield your AI tool:           guardrails connect
+  ✓ Claude Code               [secret files: reading blocked]
+      • .claude/settings.json - hard deny rules: its Read tool is blocked for secret files
+      • .mcp.json - Guardrails MCP server registered (redacted reads for secret files)
+      • CLAUDE.md - standing instructions: hands off secrets, use Guardrails
+  ✓ Cursor                    [secret files: reading blocked]
+      • .cursorignore - Cursor cannot read the listed secret files
+      • .cursor/mcp.json - Guardrails MCP server registered (redacted reads for secret files)
+  ✓ Claude Desktop            [reads files only through Guardrails]
+      • claude_desktop_config.json - Guardrails MCP server registered (redacted reads for secret files)
+      → Fully quit and reopen Claude Desktop once.
+
+Done. Restart your AI tools once so they pick up the new config.
 ```
 
-**What just happened?**
+**What just happened?** In one command Guardrails:
 
-- A tiny `.guardrails/` folder was created in your project (settings + the
+- Created a tiny `.guardrails/` folder in your project (settings + the
   protection policy - you can read it, it's plain JSON).
-- Two git "hooks" were installed. A hook is a small check git runs before a
-  commit or push. From now on, git literally cannot ship your secrets without
-  asking you first.
+- Installed two git "hooks" - small checks git runs before a commit or push. From
+  now on, git literally cannot ship your secrets without asking you first.
+- **Found every AI coding tool on your computer and wrote the strongest
+  secret-protection each one supports - for you.** No JSON editing. For Claude
+  Code and Cursor that means its file reader is *blocked* from your `.env` and
+  keys; for others it means every read comes back with `<REDACTED>` values.
 
-Re-running `guardrails setup` is always safe. Removing it is one command:
-`guardrails git uninstall`.
+Re-running `guardrails setup` is always safe (it only updates its own blocks).
+Removing the git side is one command: `guardrails git uninstall`.
+
+> **Restart your AI tools once** after setup so they load the new config.
 
 ---
 
-## Part 3 - Put Guardrails between your AI tool and your files
+## Part 3 - How your secrets are actually protected
 
-This is the part that protects you from an AI reading your secrets. It works
-with **Claude Code, Claude Desktop, Cursor, Windsurf, Antigravity, Gemini CLI,
-Codex, and GitHub Copilot** - all through one standard called MCP
-(Model Context Protocol: a standard way for AI tools to ask programs like
-Guardrails for files).
+This is the important part, so here is exactly what happened per tool - because
+a polite note in a config file is *not* protection. An AI tool can reach a file
+two ways: through Guardrails (redacted) or through its **own built-in file
+reader** (straight to disk). `guardrails setup` shuts the second door wherever a
+tool lets it:
 
-Run this inside your project:
+| Your AI tool      | What setup wrote for you                                      | Result                        |
+| ----------------- | ------------------------------------------------------------- | ----------------------------- |
+| Claude Code       | Hard `deny` rules in `.claude/settings.json` + MCP + CLAUDE.md| Its reader is **blocked**     |
+| Cursor            | `.cursorignore` + `.cursor/mcp.json`                          | **Blocked** from secret files |
+| Windsurf          | `.codeiumignore` + MCP config                                 | **Blocked** from secret files |
+| Gemini CLI        | `.geminiignore` + `.gemini/settings.json`                     | **Blocked** from secret files |
+| Claude Desktop    | Registered in `claude_desktop_config.json`                    | Reads come back **redacted**  |
+| Codex CLI         | `~/.codex/config.toml` + AGENTS.md instruction                | Redacted + instructed         |
+| Copilot (VS Code) | `.vscode/mcp.json` + copilot-instructions.md                  | Redacted + instructed         |
+| Antigravity       | AGENTS.md + a one-time manual step it prints                  | Instructed (see the note)     |
+
+For the last three there is no hard "don't read this" switch the tool exposes to
+config yet, so Guardrails is honest: it registers the redacting MCP server, adds
+a standing instruction, and **the git hooks are the backstop** - even if such a
+tool reads a secret, it can't get committed off your machine. `setup` prints a
+`→` manual step for any tool that needs one (e.g. Copilot's repo-level content
+exclusion for a hard block).
+
+**Installed a new AI tool later?** Just run `guardrails setup` again - it shields
+the newcomer and leaves everything else untouched. You don't even have to
+remember: the next time you commit, Guardrails notices the new tool and reminds
+you.
+
+### The rare manual case: `guardrails connect`
+
+If a tool keeps its config somewhere unusual, or you want to see the exact
+snippet, `guardrails connect <tool>` prints ready-to-paste MCP config with your
+machine's paths already filled in:
 
 ```bash
-guardrails connect
+guardrails connect                # list supported tools
+guardrails connect claude-desktop # copy-paste config for one tool
 ```
 
-It lists every supported tool. Then run the one for **your** tool, e.g.:
-
-```bash
-guardrails connect claude-desktop
-```
-
-Each of these prints **exact copy-paste instructions with the right file paths
-already filled in for your machine** - so this guide won't make you hand-edit
-paths. Here's what each one does:
-
-| Your AI tool      | Command                             | What you'll do with the output            |
-| ----------------- | ----------------------------------- | ----------------------------------------- |
-| Claude Code       | `guardrails connect claude-code`    | Run one `claude mcp add …` command        |
-| Claude Desktop    | `guardrails connect claude-desktop` | Paste JSON into one config file, restart  |
-| Cursor            | `guardrails connect cursor`         | Create `.cursor/mcp.json`, restart        |
-| Windsurf          | `guardrails connect windsurf`       | Paste JSON into Windsurf's MCP config     |
-| Antigravity       | `guardrails connect antigravity`    | Paste JSON into the MCP settings panel    |
-| Gemini CLI        | `guardrails connect gemini-cli`     | Paste JSON into `.gemini/settings.json`   |
-| Codex CLI         | `guardrails connect codex`          | Paste 3 lines into `~/.codex/config.toml` |
-| Copilot (VS Code) | `guardrails connect copilot`        | Create `.vscode/mcp.json`, click Start    |
-
-After connecting, your AI tool has two new abilities - `read_file` and
-`list_files` - that go **through Guardrails** instead of straight to disk.
-
-> **Honest note for agent tools (Claude Code & friends):** powerful agents also
-> have their _own_ built-in file readers that don't pass through any MCP
-> server. Guardrails covers that from the other side: the `connect` output for
-> those tools shows a one-line instruction to add to the agent's rules file
-> (e.g. CLAUDE.md) telling it to always use Guardrails for sensitive files.
-> And even if the agent ignores that and reads `.env` into a commit-bound
-> change, the git hooks still catch the secret before it leaves your machine.
+You normally won't need this - `guardrails setup` already did it.
 
 ---
 

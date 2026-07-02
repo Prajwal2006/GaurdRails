@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { run } from './cli.js';
@@ -31,12 +31,59 @@ describe('adapters', () => {
 });
 
 describe('setup', () => {
-  it('creates config and reports next steps outside a git repo', async () => {
-    const io = createBufferIO();
-    expect(await run(['setup'], io)).toBe(0);
-    const text = io.stdout.join('\n');
-    expect(text).toContain('Config created');
-    expect(text).toContain('guardrails connect');
+  it('creates config and shields detected tools hermetically', async () => {
+    // Point shield detection at an isolated fake home so the test never
+    // touches the real machine's AI tool configs.
+    const fakeHome = join(dir, 'fake-home');
+    await mkdir(join(fakeHome, '.claude'), { recursive: true });
+    await mkdir(join(fakeHome, '.gemini'), { recursive: true });
+    process.env.GUARDRAILS_HOME = fakeHome;
+    process.env.GUARDRAILS_APPDATA = join(fakeHome, 'AppData', 'Roaming');
+    try {
+      const io = createBufferIO();
+      expect(await run(['setup'], io)).toBe(0);
+      const text = io.stdout.join('\n');
+      expect(text).toContain('Config');
+      expect(text).toContain('Claude Code');
+      expect(text).toContain('Gemini CLI');
+      expect(text).toContain('reading blocked');
+      // Hard enforcement files were written into the project.
+      expect(JSON.parse(await readFile(join(dir, '.claude', 'settings.json'), 'utf8'))).toHaveProperty(
+        'permissions',
+      );
+      expect(await readFile(join(dir, '.geminiignore'), 'utf8')).toContain('.env');
+      // The shielded tool list is recorded for later new-tool notices.
+      const config = JSON.parse(await readFile(join(dir, '.guardrails', 'config.json'), 'utf8')) as {
+        shieldedTools: string[];
+      };
+      expect(config.shieldedTools).toContain('claude-code');
+    } finally {
+      delete process.env.GUARDRAILS_HOME;
+      delete process.env.GUARDRAILS_APPDATA;
+    }
+  });
+
+  it('reports gracefully when no AI tools are found', async () => {
+    const emptyHome = join(dir, 'empty-home');
+    await mkdir(emptyHome, { recursive: true });
+    process.env.GUARDRAILS_HOME = emptyHome;
+    process.env.GUARDRAILS_APPDATA = join(emptyHome, 'AppData', 'Roaming');
+    try {
+      const io = createBufferIO();
+      const sub = join(dir, 'no-tools-project');
+      await mkdir(sub, { recursive: true });
+      const previous = process.cwd();
+      process.chdir(sub);
+      try {
+        expect(await run(['setup'], io)).toBe(0);
+        expect(io.stdout.join('\n')).toContain('No AI coding tools found');
+      } finally {
+        process.chdir(previous);
+      }
+    } finally {
+      delete process.env.GUARDRAILS_HOME;
+      delete process.env.GUARDRAILS_APPDATA;
+    }
   });
 });
 

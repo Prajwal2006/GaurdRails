@@ -16,14 +16,23 @@ pnpm install && pnpm run install-cli
 This builds everything and creates a global `guardrails` command.
 Verify with `guardrails doctor`.
 
-## 2. Protect a project (once per project)
+## 2. Protect a project (one command per project)
 
 ```bash
 cd your-project
-guardrails setup     # config + git pre-commit/pre-push hooks
+guardrails setup
 ```
 
-## 3. Shield your AI tool
+This does everything: creates the config, installs git pre-commit/pre-push
+hooks, **and detects every AI tool on your machine and writes each one's
+secret-protection** (hard read-deny rules, AI ignore files, MCP registration) -
+no JSON editing. Restart your AI tools once afterwards. Re-run `setup` any time
+you install a new AI tool; it also reminds you on your next commit.
+
+## 3. (Rare) Connect a tool manually
+
+Only if a tool keeps its config somewhere unusual, or you want to see the exact
+snippet:
 
 ```bash
 guardrails connect               # list supported AI tools
@@ -32,6 +41,7 @@ guardrails connect claude-code   # or claude-desktop, cursor, windsurf,
 ```
 
 Each prints copy-paste config with your machine's paths already filled in.
+`guardrails setup` normally does this for you.
 
 ## Everyday commands
 

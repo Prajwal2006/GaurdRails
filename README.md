@@ -16,6 +16,8 @@ _AI should have access to code, not secrets._
 
 Guardrails sits between AI coding assistants (Claude Code, Claude Desktop,
 Codex, Copilot, Gemini CLI, Cursor, Windsurf, Antigravity, …) and your project.
+Run **one command** and Guardrails **finds every AI tool on your machine and
+writes the strongest secret-protection each one supports - no config editing**.
 It **detects secrets regardless of filename**, **hands the AI a redacted copy
 instead of your real values**, **stops `git commit` / `git push` from shipping
 secrets (and asks you first)**, and **explains every decision in language
@@ -30,8 +32,35 @@ careless prompt or one over-eager agent and a live production secret ends up in
 a model's context window, a log, or a commit. Guardrails is the seatbelt: it
 lets AI see your code while keeping the keys in your pocket.
 
+## The one command
+
+```bash
+cd your-project
+guardrails setup
+```
+
+That's the whole thing. `setup` detects Claude Code, Claude Desktop, Cursor,
+Windsurf, Antigravity, Gemini CLI, Codex, and GitHub Copilot - whichever are on
+your machine - and writes the enforcement each one honours: **hard read-deny
+rules** where the tool supports them (Claude Code), **AI ignore files**
+(`.cursorignore`, `.codeiumignore`, `.geminiignore`), **MCP registration**
+everywhere (so file reads come back redacted), and **standing instructions**
+where no hard block exists. You never open a JSON file. Install a new AI tool
+later? Guardrails notices on your next commit and tells you to re-run `setup`.
+
+> The point most tools miss: an AI agent's **own built-in file reader** (like
+> Claude Code's `Read` tool) doesn't go through any MCP server - it reads
+> straight off disk. Advisory notes in a `CLAUDE.md` don't stop it. Guardrails
+> writes the tool's *real, enforced* config (`permissions.deny`, ignore files)
+> so the reader is blocked at the source. See
+> [How enforcement works](./docs/security-guide.md#how-enforcement-works).
+
 ## Features
 
+- 🛡️ **One-command shield** - `guardrails setup` detects every AI tool on your
+  machine and writes each one's strongest secret-protection for you: hard
+  read-deny rules, AI ignore files, and MCP registration. Zero JSON editing.
+  Re-run it any time; it flags newly installed AI tools automatically.
 - 🔎 **Multi-layer secret detection** - filename rules, provider-specific regexes
   (OpenAI, Anthropic, AWS, GitHub, Stripe, Slack, Twilio, Google, …), private-key
   and JWT detection, connection strings, and Shannon-entropy analysis.
@@ -44,9 +73,10 @@ lets AI see your code while keeping the keys in your pocket.
 - 🪝 **Git protection** - auto-installed pre-commit / pre-push hooks that stop
   secrets before they are pushed, explain the risk in beginner terms, and ask
   you on your terminal before allowing an override.
-- 🔌 **MCP server & agent adapters** - one `guardrails connect <tool>` prints
-  ready-to-paste config for Claude Code, Claude Desktop, Cursor, Windsurf,
-  Antigravity, Gemini CLI, Codex, and GitHub Copilot.
+- 🔌 **MCP server & agent adapters** - `setup` wires these up automatically; for
+  edge cases `guardrails connect <tool>` still prints ready-to-paste config for
+  Claude Code, Claude Desktop, Cursor, Windsurf, Antigravity, Gemini CLI, Codex,
+  and GitHub Copilot.
 - 🎓 **Beginner-friendly education** - every block explains _what happened, why it
   matters, and how to fix it_, at your chosen experience level.
 - 🕵️ **Audit log & reports** - Markdown / HTML / JSON / PDF, and never stores the
@@ -69,7 +99,8 @@ guardrails/
 │   ├── adapters/       # Claude Code / Codex / Cursor / … adapters
 │   ├── audit/          # value-free audit sinks (memory + JSONL)
 │   ├── git/            # git hook installer & scanners
-│   └── mcp-server/     # MCP server: mediates AI file reads over stdio
+│   ├── mcp-server/     # MCP server: mediates AI file reads over stdio
+│   └── shield/         # detect AI tools + write per-tool enforcement config
 ├── docs/             # install guide, architecture, security, threat model, …
 ├── examples/         # runnable examples
 ├── scripts/          # install-global.mjs (creates the `guardrails` command)
@@ -88,22 +119,25 @@ cd gaurdrails
 pnpm install && pnpm run install-cli
 ```
 
-**2. Protect a project** (config + git hooks, one command):
+**2. Protect a project** (the one command - config, git hooks, and shielding
+every AI tool on your machine):
 
 ```bash
 cd your-project
 guardrails setup
 ```
 
-**3. Shield your AI tool** (prints copy-paste config, paths pre-filled):
+That's it. `setup` detects your AI tools and writes each one's secret-protection
+for you - no JSON editing. Ask your AI to read `.env` - it gets `KEY=<REDACTED>`
+and a friendly explanation, or is blocked outright where the tool supports it.
+Try to `git commit` a `.env` - Guardrails stops it and asks first.
+
+**Optional - manual connect** (only if a tool has an unusual config location):
 
 ```bash
 guardrails connect            # list supported tools
 guardrails connect claude-code
 ```
-
-That's it. Ask your AI to read `.env` - it gets `KEY=<REDACTED>` and a friendly
-explanation. Try to `git commit` a `.env` - Guardrails stops it and asks first.
 
 📘 **New to this? Follow the [step-by-step install guide](./docs/install-guide.md)** -
 it assumes nothing and shows what every step should print.

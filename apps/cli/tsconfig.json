@@ -10,7 +10,8 @@
       "@guardrails/adapters": ["../../packages/adapters/src/index.ts"],
       "@guardrails/audit": ["../../packages/audit/src/index.ts"],
       "@guardrails/git": ["../../packages/git/src/index.ts"],
-      "@guardrails/mcp-server": ["../../packages/mcp-server/src/index.ts"]
+      "@guardrails/mcp-server": ["../../packages/mcp-server/src/index.ts"],
+      "@guardrails/shield": ["../../packages/shield/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"]

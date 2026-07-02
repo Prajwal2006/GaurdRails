@@ -17,6 +17,7 @@ export default defineConfig({
       '@guardrails/adapters': pkg('adapters'),
       '@guardrails/git': pkg('git'),
       '@guardrails/mcp-server': pkg('mcp-server'),
+      '@guardrails/shield': pkg('shield'),
       '@guardrails/core': pkg('core'),
     },
   },

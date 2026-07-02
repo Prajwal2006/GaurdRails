@@ -11,6 +11,7 @@
     { "path": "./packages/adapters/tsconfig.build.json" },
     { "path": "./packages/git/tsconfig.build.json" },
     { "path": "./packages/mcp-server/tsconfig.build.json" },
+    { "path": "./packages/shield/tsconfig.build.json" },
     { "path": "./apps/cli/tsconfig.build.json" }
   ]
 }

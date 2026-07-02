@@ -1,5 +1,8 @@
 import { createInterface } from 'node:readline';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { Guardrails } from '@guardrails/core';
+import { defaultShieldEnv, detectTools } from '@guardrails/shield';
 import {
   applyFixes,
   formatBlockMessage,
@@ -16,6 +19,7 @@ import {
 } from '@guardrails/git';
 import type { IO } from '../io.js';
 import { actionLabel, c, heading, icon, severityBadge } from '../ui.js';
+import { CONFIG_DIR, CONFIG_FILE } from '../config.js';
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
@@ -168,6 +172,33 @@ export async function runGitFix(io: IO): Promise<number> {
 }
 
 /**
+ * A friendly heads-up when an AI tool appeared on this machine after
+ * `guardrails setup` last ran. Purely informational: it never blocks and any
+ * error is swallowed, because a hook must not fail for a nicety.
+ */
+function noticeNewAiTools(io: IO): void {
+  try {
+    const configPath = join(process.cwd(), CONFIG_DIR, CONFIG_FILE);
+    if (!existsSync(configPath)) return;
+    const parsed = JSON.parse(readFileSync(configPath, 'utf8')) as Record<string, unknown>;
+    if (!Array.isArray(parsed.shieldedTools)) return; // setup never shielded here
+    const shielded = parsed.shieldedTools as string[];
+    const fresh = detectTools(defaultShieldEnv(), process.cwd()).filter(
+      (tool) => !shielded.includes(tool.id),
+    );
+    if (fresh.length === 0) return;
+    const names = fresh.map((tool) => tool.name).join(', ');
+    io.err(
+      c.yellow(
+        `${icon.warn} New AI tool detected on this computer: ${names}. It can read your secrets - run \`guardrails setup\` once to shield it.`,
+      ),
+    );
+  } catch {
+    // Never let the notice interfere with the actual hook.
+  }
+}
+
+/**
  * Ask the user - on their terminal - whether to proceed despite the findings.
  * Fail safe: when there is no interactive terminal (CI, GUI git clients), the
  * answer is always "no". Pressing Enter also means "no".
@@ -197,6 +228,7 @@ async function confirmProceed(action: string, io: IO): Promise<boolean> {
 export async function runGitHook(hook: GitHook, io: IO): Promise<number> {
   const repo = await openRepo(io);
   if (repo === undefined) return 0; // don't block when we can't tell
+  noticeNewAiTools(io);
   const guardrails = new Guardrails();
   const result =
     hook === 'pre-commit'

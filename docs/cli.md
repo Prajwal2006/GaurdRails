@@ -14,8 +14,8 @@ guardrails <command>
 
 | Command             | What it does                                                                             |
 | ------------------- | ---------------------------------------------------------------------------------------- |
-| `setup`             | One-time project setup: config + git hooks + next steps.                                 |
-| `connect [tool]`    | Print copy-paste MCP config for an AI tool (paths pre-filled).                           |
+| `setup`             | The one command: config + git hooks + detect every AI tool and write each one's enforcement (deny rules, ignore files, MCP). No JSON editing. |
+| `connect [tool]`    | (Rare) Print copy-paste MCP config for one AI tool, paths pre-filled - for unusual setups. `setup` normally does this for you. |
 | `scan [paths...]`   | Scan files/directories for secrets. Exits non-zero if any are found. Alias: `secrets`.   |
 | `explain [type]`    | Beginner-friendly explanation of a secret type and how to fix it.                        |
 | `report [paths...]` | Generate a Markdown or JSON security report.                                             |
@@ -32,9 +32,8 @@ guardrails <command>
 
 ## Examples
 
-```bash
-guardrails setup                      # protect this project (config + hooks)
-guardrails connect claude-desktop     # copy-paste MCP config for Claude Desktop
+guardrails setup                      # protect this project + shield every AI tool
+guardrails connect claude-desktop     # (rare) copy-paste MCP config for one tool
 guardrails scan .                     # scan the whole project
 guardrails scan src --json            # machine-readable output
 guardrails explain openai             # learn about OpenAI keys
@@ -46,6 +45,15 @@ guardrails doctor
 
 ## Behavior notes
 
+- **`setup` writes real, enforced config - not just advice.** For tools that
+  support it (Claude Code, Cursor, Windsurf, Gemini) it writes hard read-deny
+  rules / AI ignore files so the tool's own file reader is blocked from secrets.
+  For the rest it registers the redacting MCP server and adds standing
+  instructions, and reports the honest protection level per tool. It never edits
+  a file it can't parse and backs up any JSON file once before changing it.
+- **New AI tools are flagged automatically.** `setup` records what it shielded in
+  `.guardrails/config.json`; the git pre-commit/pre-push hook re-detects tools
+  and prints a heads-up (never blocks) if a new one appeared - re-run `setup`.
 - **Sensitive files are redacted, not hidden, by default.** When policy says
   "deny" (e.g. `.env`), the MCP server returns a copy with every value replaced
   by `<REDACTED>` plus a plain-English note. Pass `--withhold` to `mcp serve`

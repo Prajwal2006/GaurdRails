@@ -37,9 +37,34 @@ exhaustively testable.
 | `@guardrails/secret-detector` | Pluggable multi-layer detection engine                 | shared                             |
 | `@guardrails/redaction`       | Structure-preserving value redaction                   | shared                             |
 | `@guardrails/policy-engine`   | Allow/deny/redact/audit decisions with inheritance     | shared                             |
-| `@guardrails/agent-adapters`  | Normalises each AI tool to a common interface          | shared                             |
+| `@guardrails/core`            | Orchestration facade + filesystem scanning             | shared, secret-detector, redaction, policy-engine |
+| `@guardrails/adapters`        | Normalises each AI tool to a common interface          | shared                             |
+| `@guardrails/audit`           | Value-free audit sinks (memory + JSONL)                | shared                             |
 | `@guardrails/git`             | Hook installation & repository scanning                | shared, secret-detector, redaction |
+| `@guardrails/mcp-server`      | MCP server mediating AI file reads over stdio          | shared, core, adapters, audit      |
+| `@guardrails/shield`          | Detect installed AI tools + write per-tool enforcement | shared                             |
 | `@guardrails/cli`             | The `guardrails` command                               | all of the above                   |
+
+## The shield layer
+
+`@guardrails/shield` is the piece that makes protection *one command*. It is a
+pure-ish delivery-side package (only Node `fs`/`os`/`path`, fully injectable via
+`ShieldEnv`) with two responsibilities:
+
+- **Detect** which AI coding tools exist on the machine, by looking for the
+  footprints they create (`~/.claude`, `~/.cursor`, VS Code Copilot extension,
+  …). Offline, instant, no elevated rights.
+- **Enforce** by writing each tool's *own* configuration to the strongest level
+  it supports - hard `permissions.deny` rules (Claude Code), AI ignore files
+  (Cursor/Windsurf/Gemini), MCP registration (all), and standing instructions
+  where no hard block exists. Two careful primitives back this:
+  `managed.ts` (begin/end marker blocks in text files) and `json-file.ts`
+  (parse-safe JSON merges with a one-time backup). It never disturbs existing
+  user config and is safe to re-run.
+
+`guardrails setup` composes `initConfig` + git hook install + `shieldProject`,
+and records the shielded tool ids so the git hook can flag tools installed
+later. See the [security guide](./security-guide.md#how-enforcement-works).
 
 ## Key design decisions
 
