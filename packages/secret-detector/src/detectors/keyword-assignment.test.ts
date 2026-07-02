@@ -23,6 +23,15 @@ describe('keywordAssignmentDetector', () => {
     expect(scan("client_secret = 'myClientSecretValue'")).toHaveLength(1);
   });
 
+  it('does not treat the next line as the value in a keys-only env example', () => {
+    // Exactly what `guardrails git fix` writes to .env.example.
+    expect(scan('DATABASE_URL=\nOPENAI_API_KEY=\nAPP_NAME=\nPORT=\n')).toHaveLength(0);
+  });
+
+  it('still flags a real value on the line after empty assignments', () => {
+    expect(scan('APP_NAME=\nAPI_KEY=realSecretValue42\n')).toHaveLength(1);
+  });
+
   const placeholders: readonly string[] = [
     'PASSWORD=changeme',
     'API_KEY=your-api-key',

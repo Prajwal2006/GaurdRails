@@ -43,12 +43,12 @@ registry.register(acmeTokenDetector);
 
 ## Writing an AI tool adapter
 
-Implement `AgentAdapter` from `@guardrails/shared`. Keep adapters thin — they
+Implement `AgentAdapter` from `@guardrails/shared`. Keep adapters thin - they
 translate a tool's requests into `DetectionContext`/policy calls and translate
 decisions back into the tool's response format.
 
 ## Other extension points (planned)
 
-- **Reporters** — render findings to a new format.
-- **Notifiers** — deliver alerts to a new channel.
-- **Policy sources** — load policies from a new backend.
+- **Reporters** - render findings to a new format.
+- **Notifiers** - deliver alerts to a new channel.
+- **Policy sources** - load policies from a new backend.

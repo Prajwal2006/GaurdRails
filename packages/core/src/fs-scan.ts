@@ -54,7 +54,7 @@ async function* walk(dir: string, ignore: ReadonlySet<string>): AsyncGenerator<s
   try {
     entries = await readdir(dir, { withFileTypes: true });
   } catch {
-    return; // unreadable directory — skip
+    return; // unreadable directory - skip
   }
   for (const entry of entries) {
     if (entry.isSymbolicLink()) continue; // don't follow symlinks
@@ -101,7 +101,7 @@ export async function scanPath(
       if (info.size > maxFileSize) continue;
       buffer = await readFile(filePath);
     } catch {
-      continue; // unreadable file — skip
+      continue; // unreadable file - skip
     }
     if (isProbablyBinary(buffer)) continue;
 

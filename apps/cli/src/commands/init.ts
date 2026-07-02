@@ -2,7 +2,7 @@ import type { IO } from '../io.js';
 import { c, heading, icon } from '../ui.js';
 import { initConfig } from '../config.js';
 
-/** `guardrails init` — scaffold `.guardrails/` config and default policy. */
+/** `guardrails init` - scaffold `.guardrails/` config and default policy. */
 export async function runInit(io: IO): Promise<number> {
   const { configPath, policyPath, alreadyExisted } = await initConfig();
   io.out(heading('Initializing Guardrails'));

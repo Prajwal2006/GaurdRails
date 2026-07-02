@@ -1,7 +1,7 @@
 /**
  * A small, dependency-free glob matcher. Supports `*` (within a path segment),
  * `**` (across segments), and `?`. Kept intentionally tiny and auditable rather
- * than pulling in a third-party matcher — this is security-relevant code.
+ * than pulling in a third-party matcher - this is security-relevant code.
  */
 
 const REGEX_SPECIAL = new Set(['.', '+', '^', '$', '{', '}', '(', ')', '|', '[', ']', '\\']);

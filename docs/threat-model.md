@@ -12,7 +12,7 @@
 
 - Developer credentials (API keys, tokens, passwords, private keys).
 - The contents of protected files.
-- The audit log (must not itself become a secret store — hence redaction).
+- The audit log (must not itself become a secret store - hence redaction).
 
 ## Trust boundaries
 
@@ -29,7 +29,7 @@ is not assumed malicious). The developer is trusted and always in control.
 
 - Guardrails is not a DLP appliance or a network firewall.
 - It does not defend against a fully malicious local process with your privileges
-  reading files directly — its job is to mediate the _AI tool_ and _git_ paths.
+  reading files directly - its job is to mediate the _AI tool_ and _git_ paths.
 - It does not guarantee detection of every possible secret format; detection is
   best-effort and layered, and errs toward caution.
 

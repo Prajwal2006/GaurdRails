@@ -1,5 +1,5 @@
 /**
- * @guardrails/secret-detector — a pluggable, multi-layer secret detection
+ * @guardrails/secret-detector - a pluggable, multi-layer secret detection
  * engine. Pure and dependency-free (besides @guardrails/shared): content goes
  * in, findings come out, with no filesystem or network access.
  */

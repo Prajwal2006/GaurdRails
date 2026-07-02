@@ -1,5 +1,5 @@
 /**
- * @guardrails/shared — the strongly-typed contract every Guardrails package
+ * @guardrails/shared - the strongly-typed contract every Guardrails package
  * depends on. This package has no runtime dependencies and performs no I/O.
  */
 

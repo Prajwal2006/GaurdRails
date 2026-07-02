@@ -3,7 +3,7 @@
 //   pnpm install && pnpm build
 //   node examples/basic-scan.mjs
 //
-// Everything runs locally — no network, no telemetry.
+// Everything runs locally - no network, no telemetry.
 
 import { DetectorRegistry, summarizeFindings } from '@guardrails/secret-detector';
 

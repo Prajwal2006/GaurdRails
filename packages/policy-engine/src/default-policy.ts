@@ -4,8 +4,8 @@ import type { Policy } from '@guardrails/shared';
  * The built-in fail-safe policy. Philosophy: AI should have access to code, not
  * secrets. So known-sensitive files and high-severity findings are denied,
  * ambiguous medium findings are redacted (still useful to the AI, minus the
- * secret), low-severity findings are audited, and everything else — ordinary
- * code with no findings — is allowed.
+ * secret), low-severity findings are audited, and everything else - ordinary
+ * code with no findings - is allowed.
  */
 export function createDefaultPolicy(): Policy {
   return {

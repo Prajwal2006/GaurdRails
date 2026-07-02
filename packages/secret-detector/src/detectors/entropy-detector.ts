@@ -22,7 +22,7 @@ const DEFAULT_ALLOWLIST: readonly RegExp[] = [
 /**
  * Format-agnostic detector: flags random-looking, high-entropy strings that may
  * be secrets even when no rule recognises them. Deliberately conservative to
- * keep false positives low — pure hex (hashes), pure digits, low-variety tokens,
+ * keep false positives low - pure hex (hashes), pure digits, low-variety tokens,
  * and allowlisted patterns are skipped, and matches are reported at low
  * confidence so policy can treat them gently.
  */

@@ -9,7 +9,7 @@ function listTerms(io: IO): void {
   io.out(c.dim('You can also use aliases like `openai`, `aws`, `postgres`, `ssh`, `dotenv`.'));
 }
 
-/** `guardrails explain <type>` — beginner-friendly education about a risk. */
+/** `guardrails explain <type>` - beginner-friendly education about a risk. */
 export function runExplain(term: string | undefined, level: ExperienceLevel, io: IO): number {
   if (term === undefined || term.trim() === '') {
     io.err(`${icon.warn} Usage: guardrails explain <type>`);

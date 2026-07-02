@@ -23,7 +23,7 @@ export interface DecidedFinding {
   readonly decision: Decision;
 }
 
-/** The overall verdict for a piece of content — the worst decision wins. */
+/** The overall verdict for a piece of content - the worst decision wins. */
 export type Outcome = 'clean' | 'audit' | 'redact' | 'deny';
 
 export interface InspectionResult {
@@ -69,7 +69,7 @@ export interface GuardrailsOptions {
 /**
  * The high-level facade that ties Guardrails together: it detects secrets,
  * asks the policy engine what to do with each, and can redact accordingly. It is
- * pure — it performs no I/O. Give it content, get a verdict.
+ * pure - it performs no I/O. Give it content, get a verdict.
  */
 export class Guardrails {
   private readonly registry: DetectorRegistry;

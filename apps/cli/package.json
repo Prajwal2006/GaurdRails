@@ -16,8 +16,13 @@
     "typecheck": "tsc -b tsconfig.build.json"
   },
   "dependencies": {
+    "@guardrails/adapters": "workspace:*",
+    "@guardrails/audit": "workspace:*",
     "@guardrails/core": "workspace:*",
+    "@guardrails/git": "workspace:*",
+    "@guardrails/mcp-server": "workspace:*",
     "@guardrails/shared": "workspace:*",
+    "@guardrails/shield": "workspace:*",
     "commander": "^12.1.0"
   }
 }

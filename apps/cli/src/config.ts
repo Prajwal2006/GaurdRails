@@ -7,6 +7,8 @@ import { EXPERIENCE_LEVELS, type ExperienceLevel } from '@guardrails/shared';
 export interface GuardrailsConfig {
   readonly experienceLevel: ExperienceLevel;
   readonly activePolicy: string;
+  /** Tool ids `guardrails setup` has already shielded (for new-tool notices). */
+  readonly shieldedTools?: readonly string[];
 }
 
 export const DEFAULT_CONFIG: GuardrailsConfig = {
@@ -20,6 +22,10 @@ export const POLICY_FILE = 'policy.json';
 
 function isExperienceLevel(value: unknown): value is ExperienceLevel {
   return typeof value === 'string' && (EXPERIENCE_LEVELS as readonly string[]).includes(value);
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string');
 }
 
 /** Load config from `.guardrails/config.json`, falling back to defaults. */
@@ -38,12 +44,22 @@ export async function loadConfig(
           typeof parsed.activePolicy === 'string'
             ? parsed.activePolicy
             : DEFAULT_CONFIG.activePolicy,
+        ...(isStringArray(parsed.shieldedTools) ? { shieldedTools: parsed.shieldedTools } : {}),
       },
       path,
     };
   } catch {
     return { config: DEFAULT_CONFIG, path: undefined };
   }
+}
+
+/** Persist the config to `.guardrails/config.json`. */
+export async function saveConfig(config: GuardrailsConfig, cwd: string = process.cwd()): Promise<string> {
+  const dir = join(cwd, CONFIG_DIR);
+  await mkdir(dir, { recursive: true });
+  const path = join(dir, CONFIG_FILE);
+  await writeFile(path, `${JSON.stringify(config, null, 2)}\n`);
+  return path;
 }
 
 /** Write default config + policy files. Returns whether config already existed. */

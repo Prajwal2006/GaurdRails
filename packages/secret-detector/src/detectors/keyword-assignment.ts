@@ -4,8 +4,11 @@ import type { DetectionContext, Detector, Finding } from '@guardrails/shared';
 const KEY_PART =
   '(?:[A-Za-z0-9_.-]*)(?:secret|token|passphrase|passwd|password|pwd|api[_-]?key|apikey|access[_-]?key|auth[_-]?token|client[_-]?secret|private[_-]?key|credentials?)';
 
+// Only horizontal whitespace may surround the `=`/`:`. Letting it span
+// newlines would treat the next line's key as this key's value in a
+// keys-only file like `.env.example` (`API_KEY=\nAPP_NAME=`).
 const ASSIGNMENT = new RegExp(
-  `(?<![\\w.])(${KEY_PART})\\s*[:=]\\s*(?:"([^"\\n]{4,})"|'([^'\\n]{4,})'|([^\\s"'\`#,;]{4,}))`,
+  `(?<![\\w.])(${KEY_PART})[^\\S\\r\\n]*[:=][^\\S\\r\\n]*(?:"([^"\\n]{4,})"|'([^'\\n]{4,})'|([^\\s"'\`#,;]{4,}))`,
   'gid',
 );
 
@@ -19,8 +22,8 @@ interface WithIndices {
 
 /**
  * Detects `KEY = value` assignments where the key name implies a secret. This is
- * the safety net that catches things no provider rule knows about — a database
- * password, a bespoke internal token, a passphrase — regardless of filename.
+ * the safety net that catches things no provider rule knows about - a database
+ * password, a bespoke internal token, a passphrase - regardless of filename.
  */
 export const keywordAssignmentDetector: Detector = {
   id: 'keyword-assignment',

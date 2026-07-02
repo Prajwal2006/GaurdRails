@@ -33,7 +33,7 @@ function checkDetectors(): Check {
   return { label: 'detectors loaded', ok: count > 0, detail: `${count} detectors` };
 }
 
-/** `guardrails doctor` — verify the environment is ready. */
+/** `guardrails doctor` - verify the environment is ready. */
 export async function runDoctor(io: IO): Promise<number> {
   const { path } = await loadConfig();
   const checks: Check[] = [

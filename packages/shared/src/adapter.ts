@@ -32,7 +32,7 @@ export interface FileReadRequest {
 /** The result of a mediated request, in Guardrails' neutral form. */
 export interface MediatedResponse {
   readonly allowed: boolean;
-  /** Content to return to the tool — possibly redacted, possibly withheld. */
+  /** Content to return to the tool - possibly redacted, possibly withheld. */
   readonly content?: string;
   /** A human-readable, educational message when access is limited. */
   readonly message?: string;
@@ -40,7 +40,7 @@ export interface MediatedResponse {
 
 /**
  * Adapts a specific AI tool to Guardrails' neutral request/response shape. Keep
- * adapters thin — all security logic lives in the shared engine; an adapter only
+ * adapters thin - all security logic lives in the shared engine; an adapter only
  * translates formats.
  */
 export interface AgentAdapter {

@@ -4,7 +4,7 @@ import type { AgentId } from './adapter.js';
 
 /**
  * A single audit-log entry. Audit events are persisted, so they must never
- * contain a raw secret value — only summaries (category/severity/location).
+ * contain a raw secret value - only summaries (category/severity/location).
  */
 export interface AuditEvent {
   /** Unique id for the event. */

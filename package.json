@@ -2,7 +2,7 @@
   "name": "guardrails-monorepo",
   "version": "0.1.0",
   "private": true,
-  "description": "Guardrails — an AI Security Layer that keeps secrets away from AI coding assistants. Privacy-first, local-only.",
+  "description": "Guardrails - an AI Security Layer that keeps secrets away from AI coding assistants. Privacy-first, local-only.",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -15,6 +15,8 @@
   ],
   "scripts": {
     "build": "tsc -b",
+    "install-cli": "pnpm run build && node scripts/install-global.mjs",
+    "uninstall-cli": "node scripts/install-global.mjs --remove",
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",

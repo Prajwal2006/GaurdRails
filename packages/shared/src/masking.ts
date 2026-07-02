@@ -3,7 +3,7 @@
  *
  * These are used to build the *previews* that appear in findings, reports, and
  * logs. They must NEVER return the full original value. This is a hard security
- * invariant of Guardrails — everything downstream trusts that a preview is safe
+ * invariant of Guardrails - everything downstream trusts that a preview is safe
  * to display and store.
  */
 

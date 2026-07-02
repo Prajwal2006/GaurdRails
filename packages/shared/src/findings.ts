@@ -23,7 +23,7 @@ export const SECRET_CATEGORIES = [
 export type SecretCategory = (typeof SECRET_CATEGORIES)[number];
 
 /**
- * A single detected risk. A `Finding` NEVER contains the raw secret value — only
+ * A single detected risk. A `Finding` NEVER contains the raw secret value - only
  * its location, a classification, and a masked preview. This is a load-bearing
  * security property: findings are logged, reported, and displayed, so they must
  * be safe to persist.
