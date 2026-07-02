@@ -9,6 +9,7 @@ import { runStatus } from './commands/status.js';
 import { runInit } from './commands/init.js';
 import { runReport, type ReportFormat } from './commands/report.js';
 import { runConfig, runPolicies } from './commands/policies.js';
+import { runGitInstall, runGitUninstall, runGitVerify } from './commands/git.js';
 
 function toLevel(value: string | undefined, fallback: ExperienceLevel): ExperienceLevel {
   return value !== undefined && (EXPERIENCE_LEVELS as readonly string[]).includes(value)
@@ -96,6 +97,29 @@ export async function run(argv: readonly string[], io: IO = consoleIO): Promise<
     .description('Print the effective configuration')
     .action(async () => {
       exitCode = await runConfig(io);
+    });
+
+  const git = program.command('git').description('Git protection: install hooks and scan commits');
+  git
+    .command('install')
+    .description('Install pre-commit and pre-push hooks')
+    .option('--force', 'back up and replace existing foreign hooks')
+    .action(async (opts: { force?: boolean }) => {
+      exitCode = await runGitInstall(io, { force: opts.force === true });
+    });
+  git
+    .command('uninstall')
+    .description('Remove the Guardrails git hooks')
+    .action(async () => {
+      exitCode = await runGitUninstall(io);
+    });
+  git
+    .command('verify')
+    .description('Scan for secrets (used by the hooks)')
+    .option('--staged', 'scan only staged content (pre-commit)')
+    .option('--fix', 'add flagged sensitive files to .gitignore')
+    .action(async (opts: { staged?: boolean; fix?: boolean }) => {
+      exitCode = await runGitVerify(io, { staged: opts.staged === true, fix: opts.fix === true });
     });
 
   program.exitOverride();

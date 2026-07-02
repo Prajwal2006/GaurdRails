@@ -14,6 +14,7 @@ export default defineConfig({
       '@guardrails/redaction': pkg('redaction'),
       '@guardrails/policy-engine': pkg('policy-engine'),
       '@guardrails/core': pkg('core'),
+      '@guardrails/git': pkg('git'),
     },
   },
   test: {

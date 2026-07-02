@@ -74,11 +74,15 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 - ✅ Testable command layer (IO abstraction); 33 CLI/core tests; verified by
   running the built binary end-to-end
 
-## Phase 6 — Git protection ⬜
+## Phase 6 — Git protection ✅
 
-- ⬜ Hook installer (pre-commit, pre-push) — idempotent, reversible
-- ⬜ Staged-file scanner + repo scanner
-- ⬜ Educational block messages + auto-fix suggestions (.gitignore, .env.example)
+- ✅ `@guardrails/git`: pre-commit + pre-push hook installer — idempotent,
+  reversible, backs up/restores foreign hooks (never clobbers)
+- ✅ Staged-file scanner (scans index content) + working-tree scanner
+- ✅ `guardrails git install / uninstall / verify [--staged] [--fix]`
+- ✅ Educational, non-shaming block message + auto-fix (`--fix` → .gitignore)
+- ✅ 6 tests over a real temp git repo; verified end-to-end (hook blocks a
+  staged `.env` with a live-looking key)
 
 ## Phase 7 — MCP server & agent adapters ⬜
 

@@ -54,6 +54,9 @@ importers:
       '@guardrails/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@guardrails/git':
+        specifier: workspace:*
+        version: link:../../packages/git
       '@guardrails/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -72,6 +75,15 @@ importers:
       '@guardrails/secret-detector':
         specifier: workspace:*
         version: link:../secret-detector
+      '@guardrails/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/git:
+    dependencies:
+      '@guardrails/core':
+        specifier: workspace:*
+        version: link:../core
       '@guardrails/shared':
         specifier: workspace:*
         version: link:../shared

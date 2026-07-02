@@ -6,7 +6,8 @@
     "rootDir": "src",
     "paths": {
       "@guardrails/shared": ["../../packages/shared/src/index.ts"],
-      "@guardrails/core": ["../../packages/core/src/index.ts"]
+      "@guardrails/core": ["../../packages/core/src/index.ts"],
+      "@guardrails/git": ["../../packages/git/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"]

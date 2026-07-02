@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@guardrails/core": "workspace:*",
+    "@guardrails/git": "workspace:*",
     "@guardrails/shared": "workspace:*",
     "commander": "^12.1.0"
   }
