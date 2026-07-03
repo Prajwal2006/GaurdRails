@@ -6,6 +6,8 @@
 
 _AI should have access to code, not secrets._
 
+[**🌐 Website**](https://gaurdrails.vercel.app/)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![Privacy: local-first](https://img.shields.io/badge/privacy-local--first-blue.svg)](./docs/security-guide.md)
 [![Tests: Vitest](https://img.shields.io/badge/tests-vitest-6E9F18.svg)](#testing)
