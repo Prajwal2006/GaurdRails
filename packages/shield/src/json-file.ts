@@ -69,11 +69,7 @@ export function objectAt(config: JsonObject, key: string): JsonObject {
 }
 
 /** Append `values` to the string array at `config[key]`, deduplicated. */
-export function addToStringArray(
-  config: JsonObject,
-  key: string,
-  values: readonly string[],
-): void {
+export function addToStringArray(config: JsonObject, key: string, values: readonly string[]): void {
   const existing = config[key];
   const array: unknown[] = Array.isArray(existing) ? existing : [];
   for (const value of values) {

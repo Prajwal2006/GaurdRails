@@ -92,7 +92,11 @@ export async function runSetup(io: IO): Promise<number> {
 
   // 3. Shield every AI tool on this machine - no manual JSON editing.
   io.out('');
-  const report = shieldProject({ projectRoot: root, cliEntry: cliEntryPath(), env: defaultShieldEnv() });
+  const report = shieldProject({
+    projectRoot: root,
+    cliEntry: cliEntryPath(),
+    env: defaultShieldEnv(),
+  });
   io.out(
     c.bold(
       `Found ${report.detected.length} AI tool${report.detected.length === 1 ? '' : 's'} on this computer. Shielding:`,
@@ -110,7 +114,9 @@ export async function runSetup(io: IO): Promise<number> {
   io.out('');
   io.out(`  ${icon.arrow} See what was risky:        ${c.cyan('guardrails scan')}`);
   io.out(`  ${icon.arrow} Watch AI access decisions: ${c.cyan('guardrails audit')}`);
-  io.out(`  ${icon.arrow} Installed a new AI tool?   ${c.cyan('guardrails setup')} ${c.gray('(just run it again)')}`);
+  io.out(
+    `  ${icon.arrow} Installed a new AI tool?   ${c.cyan('guardrails setup')} ${c.gray('(just run it again)')}`,
+  );
   io.out('');
   io.out(c.dim('Guardrails runs 100% on your machine. Nothing is ever uploaded.'));
   return 0;

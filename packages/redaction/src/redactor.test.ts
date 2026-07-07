@@ -54,6 +54,17 @@ describe('redactContent', () => {
     expect(result.content).toBe('password=<REDACTED>');
   });
 
+  it('never leaks the tail of a partially overlapping finding', () => {
+    // Span A covers [4, 14); span B starts inside A but extends past its end.
+    // The tail of B must not survive into the output.
+    const content = 'KEY=aaaaabbbbbccccc rest';
+    const a = findingFor(content, 'aaaaabbbbb');
+    const b: Finding = { ...a, index: 9, length: 10 }; // 'bbbbbccccc'
+    const result = redactContent(content, [a, b]);
+    expect(result.content).not.toContain('ccccc');
+    expect(result.content).toBe('KEY=<REDACTED> rest');
+  });
+
   it('reveals a preview when preservePreview is set (but never the full value)', () => {
     const secret = 'sk-abcdefghijklmnopqrstuvwxyz';
     const content = `KEY=${secret}`;

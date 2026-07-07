@@ -53,7 +53,7 @@ later? Guardrails notices on your next commit and tells you to re-run `setup`.
 > The point most tools miss: an AI agent's **own built-in file reader** (like
 > Claude Code's `Read` tool) doesn't go through any MCP server - it reads
 > straight off disk. Advisory notes in a `CLAUDE.md` don't stop it. Guardrails
-> writes the tool's *real, enforced* config (`permissions.deny`, ignore files)
+> writes the tool's _real, enforced_ config (`permissions.deny`, ignore files)
 > so the reader is blocked at the source. See
 > [How enforcement works](./docs/security-guide.md#how-enforcement-works).
 

@@ -28,7 +28,7 @@ treat a confirmed `sk_live` key differently from a merely high-entropy string.
 ## How enforcement works
 
 Keeping an AI away from your secrets is the whole point, so it is worth being
-precise about *how* Guardrails does it - because a friendly note in a
+precise about _how_ Guardrails does it - because a friendly note in a
 `CLAUDE.md` is **not** enforcement. An AI agent has two ways to reach a file:
 
 1. **Through an MCP server** it is connected to. Guardrails registers itself as
@@ -39,21 +39,21 @@ precise about *how* Guardrails does it - because a friendly note in a
    server. This is the gap that leaks real keys - and where advisory text fails.
 
 `guardrails setup` runs the **shield** (`@guardrails/shield`), which closes gap
-2 by writing each tool's *own enforced configuration*. It never asks you to edit
+2 by writing each tool's _own enforced configuration_. It never asks you to edit
 a config file, and it never disturbs config you already have (managed blocks
 with begin/end markers; JSON merges that keep every existing key and back the
 file up once).
 
-| Tool                | Mechanism the shield writes                                             | Enforced by        | Level          |
-| ------------------- | ----------------------------------------------------------------------- | ------------------ | -------------- |
-| Claude Code         | `permissions.deny` `Read(...)` rules in `.claude/settings.json` + MCP   | Claude Code harness| `blocks-reads` |
-| Cursor              | `.cursorignore` + MCP registration                                      | Cursor             | `blocks-reads` |
-| Windsurf            | `.codeiumignore` + MCP registration                                     | Windsurf           | `blocks-reads` |
-| Gemini CLI          | `.geminiignore` + MCP registration                                      | Gemini CLI         | `blocks-reads` |
-| Claude Desktop      | MCP registration (Desktop reaches files *only* via MCP)                 | MCP mediation      | `mcp-only`     |
-| Codex CLI           | MCP registration + `AGENTS.md` standing instruction                     | MCP + instruction  | `advisory`     |
-| GitHub Copilot      | `.vscode/mcp.json` + `copilot-instructions.md` (+ optional repo exclusion) | MCP + instruction | `advisory`     |
-| Antigravity         | `AGENTS.md` + a surfaced manual step (no safe config file yet)          | instruction        | `manual`       |
+| Tool           | Mechanism the shield writes                                                | Enforced by         | Level          |
+| -------------- | -------------------------------------------------------------------------- | ------------------- | -------------- |
+| Claude Code    | `permissions.deny` `Read(...)` rules in `.claude/settings.json` + MCP      | Claude Code harness | `blocks-reads` |
+| Cursor         | `.cursorignore` + MCP registration                                         | Cursor              | `blocks-reads` |
+| Windsurf       | `.codeiumignore` + MCP registration                                        | Windsurf            | `blocks-reads` |
+| Gemini CLI     | `.geminiignore` + MCP registration                                         | Gemini CLI          | `blocks-reads` |
+| Claude Desktop | MCP registration (Desktop reaches files _only_ via MCP)                    | MCP mediation       | `mcp-only`     |
+| Codex CLI      | MCP registration + `AGENTS.md` standing instruction                        | MCP + instruction   | `advisory`     |
+| GitHub Copilot | `.vscode/mcp.json` + `copilot-instructions.md` (+ optional repo exclusion) | MCP + instruction   | `advisory`     |
+| Antigravity    | `AGENTS.md` + a surfaced manual step (no safe config file yet)             | instruction         | `manual`       |
 
 Where a hard block is not available (Codex, Copilot, Antigravity), the shield is
 honest about it: it reports the level as `advisory`/`manual` and surfaces the

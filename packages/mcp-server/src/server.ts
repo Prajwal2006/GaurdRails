@@ -2,6 +2,7 @@ import type { AgentId, FileReadRequest, MediatedResponse } from '@guardrails/sha
 import type { Mediator } from './mediator.js';
 import type { FileSource } from './file-source.js';
 import {
+  INVALID_REQUEST,
   METHOD_NOT_FOUND,
   failure,
   parseRequest,
@@ -85,27 +86,32 @@ export class McpServer {
   async handle(message: unknown): Promise<JsonRpcResponse | null> {
     const request = parseRequest(message);
     if (request === undefined) {
-      return failure(null, METHOD_NOT_FOUND, 'Invalid JSON-RPC request');
+      return failure(null, INVALID_REQUEST, 'Invalid JSON-RPC request');
     }
     const id: JsonRpcId = request.id ?? null;
     const isNotification = request.id === undefined;
+    // Per JSON-RPC 2.0, notifications never receive a response - not even a result.
+    const respond = (response: JsonRpcResponse): JsonRpcResponse | null =>
+      isNotification ? null : response;
 
     switch (request.method) {
       case 'initialize':
-        return success(id, {
-          protocolVersion: PROTOCOL_VERSION,
-          serverInfo: { name: this.name, version: this.version },
-          capabilities: { tools: {} },
-        });
+        return respond(
+          success(id, {
+            protocolVersion: PROTOCOL_VERSION,
+            serverInfo: { name: this.name, version: this.version },
+            capabilities: { tools: {} },
+          }),
+        );
       case 'notifications/initialized':
       case 'initialized':
         return null; // notification, no response
       case 'ping':
-        return success(id, {});
+        return respond(success(id, {}));
       case 'tools/list':
-        return success(id, { tools: TOOLS });
+        return respond(success(id, { tools: TOOLS }));
       case 'tools/call':
-        return success(id, await this.callTool(request.params));
+        return respond(success(id, await this.callTool(request.params)));
       default:
         if (isNotification) return null;
         return failure(id, METHOD_NOT_FOUND, `Unknown method: ${request.method}`);

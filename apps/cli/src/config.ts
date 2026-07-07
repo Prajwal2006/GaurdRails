@@ -54,7 +54,10 @@ export async function loadConfig(
 }
 
 /** Persist the config to `.guardrails/config.json`. */
-export async function saveConfig(config: GuardrailsConfig, cwd: string = process.cwd()): Promise<string> {
+export async function saveConfig(
+  config: GuardrailsConfig,
+  cwd: string = process.cwd(),
+): Promise<string> {
   const dir = join(cwd, CONFIG_DIR);
   await mkdir(dir, { recursive: true });
   const path = join(dir, CONFIG_FILE);
