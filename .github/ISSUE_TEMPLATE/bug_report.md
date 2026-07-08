@@ -1,8 +1,8 @@
 ---
 name: Bug report
 about: Report a problem to help us improve GuardRails
-title: "[Bug]: "
-labels: ["bug"]
+title: '[Bug]: '
+labels: ['bug']
 assignees: []
 ---
 

@@ -7,7 +7,7 @@ No security knowledge needed. Total time: about 5 minutes.
 
 1. **One command shields every AI tool on your computer.** `guardrails setup`
    finds Claude Code, Cursor, Windsurf, Gemini, Codex, Copilot, and friends, and
-   writes each one's secret-protection *for you* - no config files to edit. Many
+   writes each one's secret-protection _for you_ - no config files to edit. Many
    of them get their file reader **blocked** from your `.env` and keys outright.
 2. **When an AI assistant tries to read your `.env`** (the file with your
    passwords and API keys), Guardrails steps in. The AI gets a safe copy where
@@ -117,7 +117,7 @@ Done. Restart your AI tools once so they pick up the new config.
   now on, git literally cannot ship your secrets without asking you first.
 - **Found every AI coding tool on your computer and wrote the strongest
   secret-protection each one supports - for you.** No JSON editing. For Claude
-  Code and Cursor that means its file reader is *blocked* from your `.env` and
+  Code and Cursor that means its file reader is _blocked_ from your `.env` and
   keys; for others it means every read comes back with `<REDACTED>` values.
 
 Re-running `guardrails setup` is always safe (it only updates its own blocks).
@@ -130,21 +130,21 @@ Removing the git side is one command: `guardrails git uninstall`.
 ## Part 3 - How your secrets are actually protected
 
 This is the important part, so here is exactly what happened per tool - because
-a polite note in a config file is *not* protection. An AI tool can reach a file
+a polite note in a config file is _not_ protection. An AI tool can reach a file
 two ways: through Guardrails (redacted) or through its **own built-in file
 reader** (straight to disk). `guardrails setup` shuts the second door wherever a
 tool lets it:
 
-| Your AI tool      | What setup wrote for you                                      | Result                        |
-| ----------------- | ------------------------------------------------------------- | ----------------------------- |
-| Claude Code       | Hard `deny` rules in `.claude/settings.json` + MCP + CLAUDE.md| Its reader is **blocked**     |
-| Cursor            | `.cursorignore` + `.cursor/mcp.json`                          | **Blocked** from secret files |
-| Windsurf          | `.codeiumignore` + MCP config                                 | **Blocked** from secret files |
-| Gemini CLI        | `.geminiignore` + `.gemini/settings.json`                     | **Blocked** from secret files |
-| Claude Desktop    | Registered in `claude_desktop_config.json`                    | Reads come back **redacted**  |
-| Codex CLI         | `~/.codex/config.toml` + AGENTS.md instruction                | Redacted + instructed         |
-| Copilot (VS Code) | `.vscode/mcp.json` + copilot-instructions.md                  | Redacted + instructed         |
-| Antigravity       | AGENTS.md + a one-time manual step it prints                  | Instructed (see the note)     |
+| Your AI tool      | What setup wrote for you                                       | Result                        |
+| ----------------- | -------------------------------------------------------------- | ----------------------------- |
+| Claude Code       | Hard `deny` rules in `.claude/settings.json` + MCP + CLAUDE.md | Its reader is **blocked**     |
+| Cursor            | `.cursorignore` + `.cursor/mcp.json`                           | **Blocked** from secret files |
+| Windsurf          | `.codeiumignore` + MCP config                                  | **Blocked** from secret files |
+| Gemini CLI        | `.geminiignore` + `.gemini/settings.json`                      | **Blocked** from secret files |
+| Claude Desktop    | Registered in `claude_desktop_config.json`                     | Reads come back **redacted**  |
+| Codex CLI         | `~/.codex/config.toml` + AGENTS.md instruction                 | Redacted + instructed         |
+| Copilot (VS Code) | `.vscode/mcp.json` + copilot-instructions.md                   | Redacted + instructed         |
+| Antigravity       | AGENTS.md + a one-time manual step it prints                   | Instructed (see the note)     |
 
 For the last three there is no hard "don't read this" switch the tool exposes to
 config yet, so Guardrails is honest: it registers the redacting MCP server, adds

@@ -1,4 +1,6 @@
 import { execFile } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { promisify } from 'node:util';
 
 const execFileAsync = promisify(execFile);
@@ -51,8 +53,17 @@ export class CliGitRepo implements GitRepo {
   ) {}
 
   async hooksDir(): Promise<string> {
-    const path = (await this.run(['rev-parse', '--git-path', 'hooks'])).trim();
-    // `--git-path` may return a path relative to the repo root.
+    // A relative `--git-path` result is relative to the *runner's cwd*, which
+    // may be a subdirectory of the repo - so ask git for an absolute path.
+    // Fall back for git < 2.31 (no --path-format), resolving against the root.
+    let path: string;
+    try {
+      path = (
+        await this.run(['rev-parse', '--path-format=absolute', '--git-path', 'hooks'])
+      ).trim();
+    } catch {
+      path = (await this.run(['rev-parse', '--git-path', 'hooks'])).trim();
+    }
     return path.startsWith('/') || /^[A-Za-z]:/.test(path) ? path : `${this.root}/${path}`;
   }
 
@@ -74,8 +85,10 @@ export class CliGitRepo implements GitRepo {
   }
 
   async readWorkingContent(path: string): Promise<string | undefined> {
+    // Read from disk: `git show :0:<path>` would return the *index* content
+    // (same as readStagedContent), not what is actually in the working tree.
     try {
-      return await this.run(['show', `:0:${path}`]);
+      return await readFile(join(this.root, path), 'utf8');
     } catch {
       return undefined;
     }

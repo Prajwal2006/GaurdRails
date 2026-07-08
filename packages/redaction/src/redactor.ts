@@ -63,7 +63,13 @@ export function redactContent(
   let redactions = 0;
 
   for (const span of spans) {
-    if (span.start < cursor) continue; // already covered by a previous span
+    if (span.start < cursor) {
+      // Overlaps a span we already redacted. If it extends past the covered
+      // region, swallow the tail too - it is part of a secret and must never
+      // survive into the output.
+      if (span.end > cursor) cursor = span.end;
+      continue;
+    }
     result += content.slice(cursor, span.start);
     const original = content.slice(span.start, span.end);
     result += replacementFor(span.finding, original, token, options);

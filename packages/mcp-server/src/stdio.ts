@@ -1,7 +1,7 @@
 import { createInterface } from 'node:readline';
 import type { Readable, Writable } from 'node:stream';
 import type { McpServer } from './server.js';
-import { INVALID_REQUEST, failure } from './jsonrpc.js';
+import { INTERNAL_ERROR, PARSE_ERROR, failure } from './jsonrpc.js';
 
 export interface StdioOptions {
   readonly input?: Readable;
@@ -30,12 +30,19 @@ export function serveStdio(server: McpServer, options: StdioOptions = {}): Promi
       try {
         parsed = JSON.parse(trimmed);
       } catch {
-        write(failure(null, INVALID_REQUEST, 'Parse error: invalid JSON'));
+        write(failure(null, PARSE_ERROR, 'Parse error: invalid JSON'));
         return;
       }
-      void server.handle(parsed).then((response) => {
-        if (response !== null) write(response);
-      });
+      server.handle(parsed).then(
+        (response) => {
+          if (response !== null) write(response);
+        },
+        // A rejected handler must never crash the transport (unhandled
+        // rejection would take the whole server process down).
+        () => {
+          write(failure(null, INTERNAL_ERROR, 'Internal error'));
+        },
+      );
     });
     rl.on('close', () => {
       resolvePromise();

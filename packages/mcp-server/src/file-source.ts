@@ -1,4 +1,4 @@
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { readFile, readdir, realpath, stat } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
 
 /** Supplies the set of files the server may expose and reads their contents. */
@@ -66,9 +66,14 @@ export function diskFileSource(rootDir: string): FileSource {
       const target = resolve(root, path);
       if (!isInsideRoot(root, target)) return undefined;
       try {
-        const info = await stat(target);
+        // The check above is lexical only. Resolve symlinks and re-check, so a
+        // link inside the root can never serve content from outside it
+        // (e.g. a symlink pointing at ~/.ssh/id_rsa).
+        const [realRoot, realTarget] = await Promise.all([realpath(root), realpath(target)]);
+        if (!isInsideRoot(realRoot, realTarget)) return undefined;
+        const info = await stat(realTarget);
         if (!info.isFile() || info.size > MAX_FILE_SIZE) return undefined;
-        return await readFile(target, 'utf8');
+        return await readFile(realTarget, 'utf8');
       } catch {
         return undefined;
       }

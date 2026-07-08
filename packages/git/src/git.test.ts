@@ -36,15 +36,33 @@ describe('CliGitRepo (fake runner)', () => {
     expect(await repo.readStagedContent('missing')).toBeUndefined();
   });
 
-  it('lists tracked files and reads working content', async () => {
-    const repo = new CliGitRepo('/repo', fakeRunner({ 'ls-files': 'x\0y\0', 'show :0:x': 'body' }));
+  it('lists tracked files', async () => {
+    const repo = new CliGitRepo('/repo', fakeRunner({ 'ls-files': 'x\0y\0' }));
     expect(await repo.listTrackedFiles()).toEqual(['x', 'y']);
-    expect(await repo.readWorkingContent('x')).toBe('body');
+  });
+
+  it('reads working content from disk, not from the index', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'guardrails-wt-'));
+    try {
+      await writeFile(join(dir, 'x'), 'on-disk body');
+      const repo = new CliGitRepo(dir.replace(/\\/g, '/'), fakeRunner({}));
+      expect(await repo.readWorkingContent('x')).toBe('on-disk body');
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
   });
 
   it('returns undefined when working content cannot be read', async () => {
-    const repo = new CliGitRepo('/repo', fakeRunner({}, new Set(['show :0:gone'])));
+    const repo = new CliGitRepo('/repo', fakeRunner({}));
     expect(await repo.readWorkingContent('gone')).toBeUndefined();
+  });
+
+  it('prefers the absolute hooks path reported by git', async () => {
+    const repo = new CliGitRepo(
+      '/repo',
+      fakeRunner({ 'rev-parse --path-format=absolute --git-path hooks': '/repo/.git/hooks\n' }),
+    );
+    expect(await repo.hooksDir()).toBe('/repo/.git/hooks');
   });
 
   it('resolves a relative hooks path against the root', async () => {
