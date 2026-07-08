@@ -8,9 +8,22 @@ function slashes(path: string): string {
   return path.replace(/\\/g, '/');
 }
 
-/** Absolute path to the built CLI entry point (dist/main.js). */
+declare const __filename: string | undefined;
+
+/**
+ * Absolute path to the built CLI entry point (dist/main.cjs). The published
+ * CLI is a single bundled file (see apps/cli/scripts/bundle.mjs), so the
+ * running module's own location *is* that entry point - no relative
+ * traversal needed.
+ *
+ * The bundle is CommonJS (see bundle.mjs for why), and esbuild leaves
+ * `import.meta` empty in CJS output, so this prefers the CJS `__filename`
+ * global the bundle provides and falls back to `import.meta.url` for
+ * genuine ESM contexts (tests, `tsx` dev mode).
+ */
 export function cliEntryPath(): string {
-  return slashes(fileURLToPath(new URL('../main.js', import.meta.url)));
+  if (typeof __filename === 'string') return slashes(__filename);
+  return slashes(fileURLToPath(import.meta.url));
 }
 
 function serveArgs(root: string, tool: string): string[] {

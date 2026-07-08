@@ -2,8 +2,10 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist",
-    "tsBuildInfoFile": "dist/.tsbuildinfo"
+    // Type-check/emit into a private directory, not `dist` - `dist` is
+    // reserved for the bundled, publishable CLI artifact (see scripts/bundle.mjs).
+    "outDir": ".tsbuild",
+    "tsBuildInfoFile": ".tsbuild/.tsbuildinfo"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["**/*.test.ts"],

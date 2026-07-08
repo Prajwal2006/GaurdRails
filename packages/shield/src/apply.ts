@@ -13,7 +13,7 @@ import {
 export interface ShieldOptions {
   /** The project being protected (absolute path). */
   readonly projectRoot: string;
-  /** Absolute path to the Guardrails CLI entry (dist/main.js) for MCP configs. */
+  /** Absolute path to the Guardrails CLI entry (dist/main.cjs) for MCP configs. */
   readonly cliEntry: string;
   readonly env: ShieldEnv;
   /** Shield only these tools. Default: every detected tool. */

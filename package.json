@@ -20,7 +20,8 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "tsc -b",
+    "build": "pnpm --filter guardrails run build",
+    "dev": "pnpm --filter guardrails run dev",
     "install-cli": "pnpm run build && node scripts/install-global.mjs",
     "uninstall-cli": "node scripts/install-global.mjs --remove",
     "typecheck": "tsc -b",
@@ -31,8 +32,10 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "pnpm -r exec rm -rf dist .turbo node_modules/.cache",
-    "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test"
+    "clean": "pnpm -r exec rm -rf dist .tsbuild .turbo node_modules/.cache",
+    "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test",
+    "pack:cli": "pnpm --filter guardrails exec npm pack",
+    "publish:cli": "pnpm --filter guardrails publish --access public"
   },
   "dependencies": {
     "@guardrails/secret-detector": "workspace:*",

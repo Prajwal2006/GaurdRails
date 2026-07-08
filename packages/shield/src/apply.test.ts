@@ -11,7 +11,7 @@ let appData: string;
 
 function options(): ShieldOptions {
   const env: ShieldEnv = { platform: 'win32', homeDir: home, appDataDir: appData };
-  return { projectRoot: project, cliEntry: 'C:\\gr\\apps\\cli\\dist\\main.js', env };
+  return { projectRoot: project, cliEntry: 'C:\\gr\\apps\\cli\\dist\\main.cjs', env };
 }
 
 function json(path: string): Record<string, unknown> {
