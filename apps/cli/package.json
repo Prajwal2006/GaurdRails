@@ -1,21 +1,55 @@
 {
-  "name": "@guardrails/cli",
+  "name": "guardrails",
   "version": "0.1.0",
-  "description": "The `guardrails` command-line tool.",
+  "description": "Guardrails - an AI Security Layer that keeps secrets away from AI coding assistants (Claude Code, Cursor, Windsurf, Copilot, Gemini CLI, Codex, …). 100% local, no telemetry.",
+  "keywords": [
+    "guardrails",
+    "cli",
+    "security",
+    "secrets",
+    "secret-detection",
+    "ai",
+    "llm",
+    "mcp",
+    "model-context-protocol",
+    "git-hooks",
+    "dotenv",
+    "devsecops"
+  ],
   "license": "MIT",
-  "type": "module",
-  "bin": {
-    "guardrails": "./dist/main.js"
+  "author": "Guardrails contributors",
+  "homepage": "https://github.com/Prajwal2006/GaurdRails#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Prajwal2006/GaurdRails.git",
+    "directory": "apps/cli"
   },
-  "main": "./dist/main.js",
+  "bugs": {
+    "url": "https://github.com/Prajwal2006/GaurdRails/issues"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "guardrails": "./dist/main.cjs"
+  },
   "files": [
     "dist"
   ],
-  "scripts": {
-    "build": "tsc -b tsconfig.build.json",
-    "typecheck": "tsc -b tsconfig.build.json"
+  "publishConfig": {
+    "access": "public"
   },
-  "dependencies": {
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json && node scripts/bundle.mjs",
+    "clean": "rm -rf dist .tsbuild",
+    "dev": "tsx watch src/main.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc -b tsconfig.build.json",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
     "@guardrails/adapters": "workspace:*",
     "@guardrails/audit": "workspace:*",
     "@guardrails/core": "workspace:*",
@@ -23,6 +57,8 @@
     "@guardrails/mcp-server": "workspace:*",
     "@guardrails/shared": "workspace:*",
     "@guardrails/shield": "workspace:*",
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.2"
   }
 }

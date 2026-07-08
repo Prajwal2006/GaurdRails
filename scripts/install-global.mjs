@@ -13,7 +13,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const entry = join(root, 'apps', 'cli', 'dist', 'main.js');
+const entry = join(root, 'apps', 'cli', 'dist', 'main.cjs');
 const remove = process.argv.includes('--remove');
 
 function npmGlobalBinDir() {

@@ -134,7 +134,7 @@ What they cover:
 Create a throwaway repo and try it against the built CLI:
 
 ```bash
-# 1. Build once so `node apps/cli/dist/main.js` works
+# 1. Build once so `node apps/cli/dist/main.cjs` works
 pnpm run build
 
 # 2. Make a scratch repo
@@ -147,7 +147,7 @@ echo "export const x = 1;" > index.ts
 git add .
 
 # 4. Point the CLI at the repo (adjust the path back to this monorepo)
-GR="node /path/to/GaurdRails/apps/cli/dist/main.js"
+GR="node /path/to/GaurdRails/apps/cli/dist/main.cjs"
 
 $GR git scan          # lists the staged secret, exit code 1, value redacted
 $GR git install       # installs pre-commit + pre-push hooks
@@ -228,7 +228,7 @@ pnpm run build
 printf '%s\n' \
   '{"jsonrpc":"2.0","id":1,"method":"initialize"}' \
   '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
-  | node apps/cli/dist/main.js mcp serve --no-audit
+  | node apps/cli/dist/main.cjs mcp serve --no-audit
 ```
 
 You should get two JSON-RPC responses: server info (protocol `2024-11-05`) and
@@ -240,7 +240,7 @@ Try a mediated read of a secret file (it is served as a redacted copy):
 echo "OPENAI_API_KEY=sk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" > secret.env
 printf '%s\n' \
   '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"read_file","arguments":{"path":"secret.env"}}}' \
-  | node apps/cli/dist/main.js mcp serve --no-audit
+  | node apps/cli/dist/main.cjs mcp serve --no-audit
 # → content is "OPENAI_API_KEY=<REDACTED>" + a plain-English note.
 #   The response contains NO raw key. Add --withhold for a hard block instead.
 ```
@@ -284,7 +284,7 @@ Add an entry to your client’s MCP config pointing at the built binary:
   "mcpServers": {
     "guardrails": {
       "command": "node",
-      "args": ["/absolute/path/to/GaurdRails/apps/cli/dist/main.js", "mcp", "serve", "."],
+      "args": ["/absolute/path/to/GaurdRails/apps/cli/dist/main.cjs", "mcp", "serve", "."],
       "env": { "NO_COLOR": "1" }
     }
   }
@@ -328,13 +328,13 @@ Guarantees enforced (and tested):
 
 ## 7. Troubleshooting
 
-| Symptom                                      | Fix                                                                             |
-| -------------------------------------------- | ------------------------------------------------------------------------------- |
-| `format:check` flags every file (Windows)    | CRLF checkout - run `pnpm run format` or `git config core.autocrlf input`.      |
-| `git` tests skip / “not a git repository”    | Install git and ensure it’s on `PATH` (`git --version`).                        |
-| `mcp serve` seems to hang                    | Expected - it reads stdin until closed. Pipe input or Ctrl-D/Ctrl-C.            |
-| MCP client shows nothing                     | Use an **absolute** path to `apps/cli/dist/main.js` and `pnpm run build` first. |
-| Coverage threshold failure after adding code | Add tests, or run `pnpm run test:coverage` to see uncovered lines.              |
+| Symptom                                      | Fix                                                                              |
+| -------------------------------------------- | -------------------------------------------------------------------------------- |
+| `format:check` flags every file (Windows)    | CRLF checkout - run `pnpm run format` or `git config core.autocrlf input`.       |
+| `git` tests skip / “not a git repository”    | Install git and ensure it’s on `PATH` (`git --version`).                         |
+| `mcp serve` seems to hang                    | Expected - it reads stdin until closed. Pipe input or Ctrl-D/Ctrl-C.             |
+| MCP client shows nothing                     | Use an **absolute** path to `apps/cli/dist/main.cjs` and `pnpm run build` first. |
+| Coverage threshold failure after adding code | Add tests, or run `pnpm run test:coverage` to see uncovered lines.               |
 
 ---
 

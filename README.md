@@ -34,6 +34,21 @@ careless prompt or one over-eager agent and a live production secret ends up in
 a model's context window, a log, or a commit. Guardrails is the seatbelt: it
 lets AI see your code while keeping the keys in your pocket.
 
+## Installation
+
+```bash
+npm install -g guardrails
+```
+
+Or run it without installing anything:
+
+```bash
+npx guardrails setup
+```
+
+Both install a single, dependency-free `guardrails` binary (Node.js ≥ 20
+required). Prefer building from source? See [Development](#development).
+
 ## The one command
 
 ```bash
@@ -111,15 +126,16 @@ guardrails/
 
 ## Quick start
 
-> Requires Node.js ≥ 20, git, and [pnpm](https://pnpm.io) (`npm i -g pnpm`).
+> Requires Node.js ≥ 20 and git.
 
 **1. Install once** (creates the global `guardrails` command):
 
 ```bash
-git clone https://github.com/prajwal2006/gaurdrails.git
-cd gaurdrails
-pnpm install && pnpm run install-cli
+npm install -g guardrails
 ```
+
+Building from source instead? See [Development](#development) - it covers
+the same `guardrails` command via `pnpm run install-cli`.
 
 **2. Protect a project** (the one command - config, git hooks, and shielding
 every AI tool on your machine):
@@ -172,6 +188,70 @@ it assumes nothing and shows what every step should print.
 pnpm test            # run the whole suite
 pnpm test:coverage   # with coverage (core security modules target ≥ 90%)
 ```
+
+## Development
+
+This is a pnpm workspace: `packages/*` are the internal libraries (detection,
+policy, redaction, git, MCP server, …) and `apps/cli` is the `guardrails`
+command that composes them. `apps/cli` is bundled with
+[esbuild](https://esbuild.github.io) into a single, dependency-free
+`dist/main.cjs` - that bundle, not the workspace packages, is what gets
+published to npm as the `guardrails` package.
+
+```bash
+git clone https://github.com/Prajwal2006/GaurdRails.git
+cd GaurdRails
+pnpm install          # requires Node.js ≥ 20 and pnpm (npm i -g pnpm)
+
+pnpm build            # type-check everything, then bundle the CLI
+pnpm test             # run the test suite
+pnpm run check        # format check + lint + typecheck + test (the CI gate)
+
+pnpm run install-cli  # build, then link `guardrails` globally from source
+pnpm dev              # watch mode: reruns the CLI on save (via tsx), for quick iteration
+```
+
+Useful day-to-day scripts (see [`package.json`](./package.json) for the full list):
+
+| Script                                       | What it does                                                       |
+| -------------------------------------------- | ------------------------------------------------------------------ |
+| `pnpm build`                                 | Type-check the workspace, then bundle `apps/cli` → `dist/main.cjs` |
+| `pnpm dev`                                   | Run the CLI straight from TypeScript source, restarting on save    |
+| `pnpm test` / `test:watch` / `test:coverage` | Vitest, once / watch / with coverage                               |
+| `pnpm lint` / `lint:fix`                     | ESLint across the workspace                                        |
+| `pnpm format` / `format:check`               | Prettier, write or check-only                                      |
+| `pnpm clean`                                 | Remove build output (`dist`, `.tsbuild`) in every package          |
+| `pnpm check`                                 | Everything CI runs: format check, lint, typecheck, test            |
+
+Once built, run the bundle directly without installing anything:
+
+```bash
+node apps/cli/dist/main.cjs --help
+```
+
+## Publishing (maintainers)
+
+Only `apps/cli` is published, as the `guardrails` package - the `packages/*`
+libraries stay internal, bundled into it at build time.
+
+```bash
+# 1. Bump the version (apps/cli/package.json; keep the root package in sync if you like)
+cd apps/cli && npm version <patch|minor|major>
+
+# 2. Sanity-check what will actually ship
+pnpm run check                 # from the repo root: format, lint, typecheck, test
+pnpm run pack:cli              # npm pack --dry-run is run for you by `prepack`
+tar -tzf apps/cli/guardrails-*.tgz   # inspect the tarball contents
+
+# 3. Publish
+pnpm run publish:cli           # pnpm --filter guardrails publish --access public
+```
+
+`prepack` / `prepublishOnly` hooks in `apps/cli/package.json` rebuild the
+bundle automatically before either `npm pack` or `npm publish`/`pnpm publish`
+runs, so a stale `dist/` can never ship. `apps/cli/package.json`'s `files`
+field keeps the published tarball to exactly `dist/`, `README.md`, and
+`LICENSE`.
 
 ## License
 
