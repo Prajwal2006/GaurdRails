@@ -48,12 +48,14 @@ describe('setup', () => {
       expect(text).toContain('Gemini CLI');
       expect(text).toContain('reading blocked');
       // Hard enforcement files were written into the project.
-      expect(JSON.parse(await readFile(join(dir, '.claude', 'settings.json'), 'utf8'))).toHaveProperty(
-        'permissions',
-      );
+      expect(
+        JSON.parse(await readFile(join(dir, '.claude', 'settings.json'), 'utf8')),
+      ).toHaveProperty('permissions');
       expect(await readFile(join(dir, '.geminiignore'), 'utf8')).toContain('.env');
       // The shielded tool list is recorded for later new-tool notices.
-      const config = JSON.parse(await readFile(join(dir, '.guardrails', 'config.json'), 'utf8')) as {
+      const config = JSON.parse(
+        await readFile(join(dir, '.guardrails', 'config.json'), 'utf8'),
+      ) as {
         shieldedTools: string[];
       };
       expect(config.shieldedTools).toContain('claude-code');

@@ -43,10 +43,14 @@ export function parseRequest(value: unknown): JsonRpcRequest | undefined {
   const record = value as Record<string, unknown>;
   if (record.jsonrpc !== '2.0') return undefined;
   if (typeof record.method !== 'string') return undefined;
+  const id = record.id;
+  if (id !== undefined && id !== null && typeof id !== 'string' && typeof id !== 'number') {
+    return undefined; // ids must be string | number | null per JSON-RPC 2.0
+  }
   const request: JsonRpcRequest = { jsonrpc: '2.0', method: record.method };
   return {
     ...request,
-    ...(record.id !== undefined ? { id: record.id as JsonRpcId } : {}),
+    ...(id !== undefined ? { id } : {}),
     ...(record.params !== undefined ? { params: record.params } : {}),
   };
 }

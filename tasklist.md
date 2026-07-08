@@ -102,7 +102,7 @@ next begins. Legend: ✅ done · 🚧 in progress · ⬜ planned.
 
 The headline feature: **one command detects every AI tool on the machine and
 writes the strongest secret-protection each one supports - no JSON editing.**
-This closes the gap where an agent's *own* built-in file reader (e.g. Claude
+This closes the gap where an agent's _own_ built-in file reader (e.g. Claude
 Code's `Read` tool) bypassed the MCP server and read real keys off disk.
 
 - ✅ `@guardrails/shield` package - detection + enforcement writers, fully
@@ -117,7 +117,7 @@ Code's `Read` tool) bypassed the MCP server and read real keys off disk.
   - **Cursor / Windsurf / Gemini** - AI ignore files (`.cursorignore`,
     `.codeiumignore`, `.geminiignore`) + MCP registration (`blocks-reads`)
   - **Claude Desktop** - MCP registration in the shared config; reaches files
-    only through MCP, so registration *is* the enforcement (`mcp-only`)
+    only through MCP, so registration _is_ the enforcement (`mcp-only`)
   - **Codex / Copilot** - MCP registration + standing instructions
     (`AGENTS.md` / `copilot-instructions.md`) where no hard block exists
     (`advisory`), with the manual content-exclusion step surfaced
@@ -128,7 +128,7 @@ Code's `Read` tool) bypassed the MCP server and read real keys off disk.
   keeps every existing key, and writes a one-time `.guardrails-backup`
 - ✅ `guardrails setup` runs the shield automatically and prints a per-tool
   enforcement report; records `shieldedTools` in `.guardrails/config.json`
-- ✅ New-tool watch: the git hook flags any AI tool installed *after* setup and
+- ✅ New-tool watch: the git hook flags any AI tool installed _after_ setup and
   tells the user to re-run `guardrails setup` (never blocks, never throws)
 - ✅ 27 shield tests + hermetic end-to-end (fake home, 7 tools) + idempotent
   re-run; all 398 tests green
@@ -148,7 +148,7 @@ Code's `Read` tool) bypassed the MCP server and read real keys off disk.
 - ⬜ Broaden detection: JetBrains AI Assistant, Zed, Cline/Roo, Aider,
   Continue.dev, Amazon Q, Sourcegraph Cody (add ids to `SHIELDABLE_TOOL_IDS`,
   paths to `detect.ts`, and an applier in `apply.ts` - one place each)
-- ⬜ `guardrails setup --dry-run` - print what *would* change without writing
+- ⬜ `guardrails setup --dry-run` - print what _would_ change without writing
 - ⬜ Cross-check `CLAUDE_DENY_RULES` / `SECRET_IGNORE_PATTERNS` against the
   filename detector's rule list with a test that fails if they drift apart
 - ⬜ Windows path edge cases in `serveArgs` (spaces in project path) - add a
@@ -180,7 +180,7 @@ The project is a pnpm monorepo. To get oriented quickly:
 - To add a new AI tool end-to-end: add its id to `SHIELDABLE_TOOL_IDS` and a
   detection entry in `detect.ts`, then add an applier in `apply.ts` and wire it
   into the `APPLIERS` map. Add a matching guide in `apps/cli/src/commands/
-  connect.ts` for the manual fallback. Cover it with a test in
+connect.ts` for the manual fallback. Cover it with a test in
   `packages/shield/src/apply.test.ts`.
 - Enforcement patterns (deny rules, ignore globs, advisory text) are all in
   `packages/shield/src/constants.ts` - change them in one place.

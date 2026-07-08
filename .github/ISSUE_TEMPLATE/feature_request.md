@@ -1,8 +1,8 @@
 ---
 name: Feature request
 about: Suggest an idea or enhancement for GuardRails
-title: "[Feature]: "
-labels: ["enhancement"]
+title: '[Feature]: '
+labels: ['enhancement']
 assignees: []
 ---
 
