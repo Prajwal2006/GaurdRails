@@ -1,5 +1,5 @@
 {
-  "name": "guardrails-monorepo",
+  "name": "guardrails-cli",
   "version": "0.1.0",
   "private": true,
   "description": "Guardrails - an AI Security Layer that keeps secrets away from AI coding assistants. Privacy-first, local-only.",
