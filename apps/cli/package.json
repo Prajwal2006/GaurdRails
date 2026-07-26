@@ -57,7 +57,7 @@
     "@guardrails/mcp-server": "workspace:*",
     "@guardrails/shared": "workspace:*",
     "@guardrails/shield": "workspace:*",
-    "commander": "^12.1.0",
+    "commander": "^15.0.0",
     "esbuild": "^0.25.0",
     "tsx": "^4.19.2"
   }
