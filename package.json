@@ -9,12 +9,6 @@
 		"node": ">=20"
 	},
 	"packageManager": "pnpm@10.33.0",
-	"pnpm": {
-		"overrides": {
-			"vite": ">=6.4.3",
-			"esbuild": ">=0.25.0"
-		}
-	},
 	"workspaces": [
 		"packages/*",
 		"apps/*"

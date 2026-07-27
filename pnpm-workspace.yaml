@@ -2,6 +2,10 @@ packages:
   - 'packages/*'
   - 'apps/*'
 
+overrides:
+  vite: '>=6.4.3'
+  esbuild: '>=0.25.0'
+
 # esbuild ships a native binary that Vitest needs; allow its install script.
 onlyBuiltDependencies:
   - esbuild
