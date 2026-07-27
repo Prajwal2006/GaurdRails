@@ -37,13 +37,13 @@ lets AI see your code while keeping the keys in your pocket.
 ## Installation
 
 ```bash
-npm install -g guardrails
+npm install -g guardrails-cli
 ```
 
 Or run it without installing anything:
 
 ```bash
-npx guardrails setup
+npx guardrails-cli setup
 ```
 
 Both install a single, dependency-free `guardrails` binary (Node.js ≥ 20
@@ -131,7 +131,7 @@ guardrails/
 **1. Install once** (creates the global `guardrails` command):
 
 ```bash
-npm install -g guardrails
+npm install -g guardrails-cli
 ```
 
 Building from source instead? See [Development](#development) - it covers
@@ -244,7 +244,7 @@ pnpm run pack:cli              # npm pack --dry-run is run for you by `prepack`
 tar -tzf apps/cli/guardrails-*.tgz   # inspect the tarball contents
 
 # 3. Publish
-pnpm run publish:cli           # pnpm --filter guardrails publish --access public
+pnpm run publish:cli           # pnpm --filter ./apps/cli publish --access public
 ```
 
 `prepack` / `prepublishOnly` hooks in `apps/cli/package.json` rebuild the
