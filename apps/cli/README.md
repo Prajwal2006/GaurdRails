@@ -7,13 +7,13 @@ Antigravity, …). 100% local - no telemetry, no network calls.
 ## Install
 
 ```bash
-npm install -g guardrails
+npm install -g guardrails-cli
 ```
 
 Or run it without installing anything:
 
 ```bash
-npx guardrails setup
+npx guardrails-cli setup
 ```
 
 ## Use

@@ -1,5 +1,5 @@
 {
-  "name": "guardrails",
+  "name": "guardrails-cli",
   "version": "0.1.0",
   "description": "Guardrails - an AI Security Layer that keeps secrets away from AI coding assistants (Claude Code, Cursor, Windsurf, Copilot, Gemini CLI, Codex, …). 100% local, no telemetry.",
   "keywords": [
