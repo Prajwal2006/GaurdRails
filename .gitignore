@@ -39,3 +39,6 @@ id_ed25519
 # Guardrails local state
 .guardrails/audit.log
 .guardrails/cache/
+
+# GitHub Packages publish staging (generated, see scripts/prepare-gpr-package.mjs)
+.gpr-stage/

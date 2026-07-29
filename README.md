@@ -253,6 +253,14 @@ runs, so a stale `dist/` can never ship. `apps/cli/package.json`'s `files`
 field keeps the published tarball to exactly `dist/`, `README.md`, and
 `LICENSE`.
 
+A second, scoped copy (`@prajwal2006/guardrails-cli`) is also published to
+GitHub Packages so the package shows up under this repository's **Packages**
+sidebar - npmjs.com packages never do, regardless of the `repository` field
+in `package.json`. This happens automatically via
+[`.github/workflows/publish-gpr.yml`](.github/workflows/publish-gpr.yml) on
+every GitHub release; to run it manually, `pnpm run publish:gpr` (stages the
+scoped package with `scripts/prepare-gpr-package.mjs`, then publishes it).
+
 ## License
 
 [MIT](./LICENSE) - free to use, modify, and distribute.
