@@ -29,7 +29,9 @@
 		"clean": "pnpm -r exec rm -rf dist .tsbuild .turbo node_modules/.cache",
 		"check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test",
 		"pack:cli": "pnpm --filter ./apps/cli exec npm pack",
-		"publish:cli": "pnpm --filter ./apps/cli publish --access public"
+		"publish:cli": "pnpm --filter ./apps/cli publish --access public",
+		"prepare:gpr": "node scripts/prepare-gpr-package.mjs",
+		"publish:gpr": "pnpm run build && pnpm run prepare:gpr && npm publish ./.gpr-stage"
 	},
 	"dependencies": {
 		"@guardrails/secret-detector": "workspace:*",

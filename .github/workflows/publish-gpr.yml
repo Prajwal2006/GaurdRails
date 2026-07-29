@@ -1,0 +1,42 @@
+name: Publish to GitHub Packages
+
+# Publishes a scoped copy of the CLI (@prajwal2006/guardrails-cli) to GitHub
+# Packages. This is separate from the npmjs.com publish (`guardrails-cli`,
+# done manually via `pnpm run publish:cli`) - it exists so the package shows
+# up under this repository's "Packages" sidebar, which GitHub only populates
+# for its own package registry.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish-gpr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
+          scope: '@prajwal2006'
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build
+
+      - run: node scripts/prepare-gpr-package.mjs
+
+      - run: npm publish
+        working-directory: .gpr-stage
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
